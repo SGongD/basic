@@ -1,0 +1,102 @@
+management:
+  endpoints:
+    web:
+      base-path: /rest/actuator
+      exposure:
+        include: '*'
+server:
+  shutdown: graceful   # With graceful shutdown, when the container shuts down, the web server will no longer receive new requests and will wait a buffer period for active requests to complete. New features introduced from springboot 2.3.0
+  servlet:
+    context-path: /
+  port: 8090
+
+spring:
+  servlet:
+    multipart:
+      max-request-size: 200MB
+      max-file-size: 200MB
+  main:
+    allow-bean-definition-overriding: true # Resolve duplicate bean definitions. Set to true, after defining a bean overriding a previously defined bean of the same name. Springboot 2.0.4 starts to support, the default is rue; springboot 2.1.0 starts to default to false
+  #    allow-circular-references: true # Turn on circular dependencies, starting from springboot 2.6.0, circular dependencies are disabled by default
+  application:
+    name: basic-newbie-study # app name
+  freemarker:
+    # template suffix
+    suffix: .ftl
+    # document type
+    content-type: text/html
+    # page encoding
+    charset: UTF-8
+    # page caching true on false off
+    cache: false
+    # Set the template loading path, multiple separated by commas, default:
+    template-loader-path:  classpath:/templates/
+    # Sets whether to allow Http Servlet Request attributes to override (hide) controller-generated model attributes of the same name.
+    allow-request-override: false
+    # Sets whether to allow Http Session attributes to override (hide) controller-generated model attributes of the same name.
+    allow-session-override: false
+    # Check if the template location exists.
+    check-template-location: true
+    # Enable an MVC view solution for this technique.
+    enabled: true
+    # Sets whether all request attributes should be added to the model before merging with the template.
+    expose-request-attributes: false
+    # Sets whether to add all Http Session properties to the model before merging with the template.
+    expose-session-attributes: false
+    # Set whether to expose the Request Context for use by the Spring macro library, named "Spring Macro Request Context".
+    expose-spring-macro-helpers: true
+    order: 1
+    # Prefer filesystem access for template loading. File system access allows hot detection of template changes.
+    prefer-file-system-access: true
+    # The name of the Request Context property for all views.
+    request-context-attribute: request
+    settings:
+      # Solve the case that the foreground uses {} to assign the value to empty
+      classic_compatible: true
+      #
+      default_encoding: UTF-8
+      # Check the template update delay time, set to 0 to check immediately, if the time is greater than 0, there will be cache inconvenience for template testing
+      template_update_delay: 0
+  mvc:
+    static-path-pattern: /static/**
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource                        # Declared as hikari data source connection pool
+    driver-class-name: com.mysql.jdbc.Driver                        # MYSQL driver class
+#    driver-class-name: org.sqlite.JDBC                              # sqlite driver class
+    dynamic: # Multiple data sources
+      hikari:
+        min-idle: 10                                                # Minimum idle connection
+        max-pool-size: 30                                           # Maximum number of connections
+        idle-timeout: 600000                                        # Connection minimum idle time (unit: milliseconds), 10 minutes
+        max-lifetime: 1800000                                       # Maximum connection survival time (unit: milliseconds), 30 minutes
+        connection-timeout: 30000                                   # The longest waiting time for the connection pool to obtain a connection (unit: milliseconds), 30 seconds
+        connection-test-query: SELECT 1                             # Verify query
+      primary: db1                                                  # Set default data source
+      strict: false                                                 # Strictly match the data source, the default is false. true throws an exception if the specified data source is not matched, false uses the default data source
+      datasource:
+        db1:
+          username: root
+          password: wjdgptn1016*
+          url: 'jdbc:mysql://localhost:3306/db1?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true'
+#          username:
+#          password:
+          # sqlite3 Absolute paths are recommended, relative paths are used here
+#          url: 'jdbc:sqlite::resource:db/sqlite/db1.sqlite3'
+        db2:
+          username: root
+          password: wjdgptn1016*
+          url: 'jdbc:mysql://localhost:3306/db2?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true'
+#          username:
+#          password:
+          # sqlite3 Absolute paths are recommended, relative paths are used here
+#          url: 'jdbc:sqlite::resource:db/sqlite/db2.sqlite3'
+mybatis-plus:
+  configuration:
+    default-fetch-size: 100                                  # batch size
+    map-underscore-to-camel-case: true                       # Convert underscores to camelCase
+
+app:
+  version: '@version@'
+
+logging:
+  config: classpath:log4j2.xml
