@@ -66,6 +66,18 @@
 		]]>
     </select>
 
+    <select id="findUserByPage" parameterType="string" resultMap="userMap">
+        <include refid="find_xxx"/>
+        <include refid="from_xxx"/>
+        <where>
+            <if test="keywords != null and keywords != ''">
+                <bind name="pattern" value="'%' + _parameter.keywords + '%'"/>
+                title like #{pattern}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
     <select id="findUserByShop" parameterType="string" resultMap="userMap">
         <include refid="find_xxx"/>
         <include refid="from_xxx"/>

@@ -19,7 +19,7 @@ public class ViewController {
 
     @GetMapping("view/{submenu}/{menu}")
     public String setconfig(@PathVariable(value = "submenu") String submenu, @PathVariable(value = "menu") String menu) {
-        log.info("# loding view/{}/{} ", submenu, menu);
+        log.info("# View loding view/{}/{} ", submenu, menu);
         return "view/" + submenu + "/" + menu;
     }
 }

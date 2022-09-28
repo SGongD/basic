@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -32,10 +34,11 @@ public class UserController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
-    @GetMapping("/user/user_list")
-    public String user_list(ModelMap map) {
+    @GetMapping("view/user/user_list")
+    public String user_list(ModelMap usermap) {
         PageInfo<User> upage = userService.findUserByPage(null, null);
-        map.put("upage", upage);
+        log.info("pppppage = {}", upage);
+        usermap.put("upage", upage);
         return "view/user/user_list";
     }
 
@@ -43,7 +46,7 @@ public class UserController {
     public String user_list_page(@RequestParam(value="keywords", required = false) String keywords, @RequestParam(value = "pageNum", required = false) Integer pageNum, ModelMap map) {
         log.info("#user pagination 쿼리 뉴스 pageNum={} , keywords={}", pageNum, keywords);
         PageInfo<User> upage = userService.findUserByPage(pageNum, keywords);
-        map.put("upage", page);
+        map.put("upage", upage);
         map.put("keywords", keywords);
         return "view/user/user_list_page";
     }

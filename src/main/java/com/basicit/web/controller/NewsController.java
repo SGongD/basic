@@ -109,10 +109,15 @@ public class NewsController {
     @GetMapping("/news/list")
     public String list(ModelMap map) {
         PageInfo<News> page = newsService.findNewsByPage(null, null);
+        log.info("jjjjpage = {}", page);
         map.put("page", page);
         return "view/news/list";
     }
 
+    /**
+     ** 
+     ** 페이지수 관련 Mapping
+     */
     @PostMapping("/news/list_page")
     public String list_page(@RequestParam(value = "keywords", required = false) String keywords, @RequestParam(value = "pageNum", required = false) Integer pageNum, ModelMap map) {
         log.info("#pagination 쿼리 뉴스 pageNum={} , keywords={}", pageNum, keywords);

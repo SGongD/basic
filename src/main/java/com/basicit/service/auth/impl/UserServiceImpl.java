@@ -1,6 +1,8 @@
 package com.basicit.service.auth.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.basicit.framework.constant.Constants;
+import com.basicit.framework.datasource.DataSourceTagger;
 import com.basicit.framework.datasource.PageInfo;
 import com.basicit.framework.exception.BusinessException;
 import com.basicit.framework.pk.FactoryAboutKey;
@@ -139,7 +141,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findUserByKeywords(String keywords) {
         log.info("# 유저 데이터베이스 쿼리");
-        return userMapper.findNewsByKeywords(keywords);
+        return userMapper.findUserByKeywords(keywords);
     }
 
     @Override
@@ -148,7 +150,7 @@ public class UserServiceImpl implements UserService {
         log.info("#User Database resultPage={}", resultPage);
         return resultPage;
     }
-
+    @DS(DataSourceTagger.DB1)
     private PageInfo<User> findByPage(Integer pageNum, String keywords) {
         log.debug("# pageNum={},keywords={}", pageNum, keywords);
         if (pageNum == null) {

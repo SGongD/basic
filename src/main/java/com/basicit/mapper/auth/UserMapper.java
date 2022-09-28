@@ -52,8 +52,15 @@ public interface UserMapper extends BaseMapper<User> {
      */
     List<User> findUserByRoleCode(@Param("roleCode") String username);
 
+    /**
+     * 페이지를 조회하는 쿼리
+     * 
+     * @param page 페이지
+     * @param keywords 키워드(검색어)
+     * @return page 페이지
+     */
     PageInfo<User> findUserByPage(PageInfo<User> page, @Param("keywords") String keywords);
 
-    List<User> findNewsByKeywords(@Param("keywords") String keywords);
+    List<User> findUserByKeywords(@Param("keywords") String keywords);
 
 }

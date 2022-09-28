@@ -145,7 +145,6 @@
     <div class="modal fade" id="modal-form2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
-
             </div>
         </div>
     </div>
@@ -156,59 +155,7 @@
                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
                     <h4 class="modal-title">사용자 추가</h4>
                 </div>
-                <div class="modal-body">
-
-                    <form role="form" id="add" name="add" class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">아이디</label>
-                            <div class="col-sm-8">
-                                <input type="text" id="username" name="usseracc" placeholder="아이디는 6-12자 사이로 입력하세요"  required class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">이름</label>
-                            <div class="col-sm-8"><input type="text" name="userName" placeholder="이름을 입력하세요" class="form-control"></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">비밀번호</label>
-                            <div class="col-sm-8"><input type="text" name="userPassword" placeholder="비밀번호를 입력하세요" class="form-control"></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">전화번호</label>
-                            <div class="col-sm-8"><input type="tel" id="phoneNum" placeholder="11자리 숫자로 이루어진 전화번호를 입력하세요" name="phoneNum" class="form-control"></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">이메일</label>
-                            <div class="col-sm-8"><input type="email" placeholder="이메일을 입력하세요" class="form-control" name="email"></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">회사</label>
-                            <div class="col-sm-8">
-                                <select name="business" class="form-control input-s-sm inline">
-                                    <option value="">회사를 선택하세요</option>
-                                    <option value="1">베이직인터내셔널</option>
-                                    <option value="2">비드넷씨엔씨</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">역할</label>
-                            <div class="col-sm-8">
-                                <select name="jiaos" class="form-control input-s-sm inline"  data-toggle-name="#jiaosbox">
-                                    <option value="" >역할을 선택하세요</option>
-                                    <option value="1" data-box-name="lianjia">관리자</option>
-                                    <option value="2" data-box-name="fangdd">사용자</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group m-t-sm" >
-                            <div class="col-sm-6 col-sm-push-3">
-                                <button class="btn btn-md btn-primary " type="submit"><strong>등록</strong></button>
-                                <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">취소</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                <#include "/view/user/user_add.ftl"/>
             </div>
         </div>
     </div>
@@ -252,8 +199,8 @@
     <script src="${ctx}/static/js/plugins/validate/jquery.validate.min.js"></script>
     <script src="${ctx}/static/js/plugins/validate/validate-ko.js" ></script>
     <script>
-
     var _ctx = '${ctx}';
+
     $(".chosen-select").chosen({no_results_text:'선택할 항목이 없습니다',width:"100%",disable_search_threshold:10});
     function appendSelect(){
         var json=[
@@ -289,12 +236,23 @@
         }
         toastr.success('사용자 상태를 변경했습니다', '작업성공');
     };
+
+    function handleOnId(e) {
+        e.value = e.value.replace(/[^A-Za-z0-9]/ig, '');
+    }
+
+    function handleOnName(e) {
+        e.value = e.value.replace();
+    }
+
+
         $(document).ready(function () {
             $("#add").validate({
 
                 rules: {
                     usseracc: {
                         required: true,
+                        isEngDi: true,
                         rangelength: [6, 12],
                     },
                     userName: {
@@ -316,8 +274,9 @@
                 messages: {
                     usseracc: {
                         required: "아이디를 입력하세요",
-                        rangelength: jQuery.validator.format("6-12자 사이의 영어/한글을 입력하세요"),
-                        remote: jQuery.validator.format("{0} is already in use")
+                        rangelength: jQuery.validator.format("6-12자 사이의 영어/숫자를 입력하세요"),
+                        remote: jQuery.validator.format("{0} is already in use"),
+                        isEngDi: jQuery.validator.format("영문과 숫자만 입력 가능합니다")
                     },
                     userName: {
                         required: "이름을 입력하세요",
@@ -325,7 +284,7 @@
                     },
                     phoneNum: {
                         required: "전화번호를 입력하세요",
-                        isMobile: "유효한 전화번로를 입력하세요"
+                        isMobile: "유효한 전화번호를 입력하세요"
                     },
                     sphoneNum: {
                         required: "전화번호를 다시 한번입력하세요",
@@ -340,19 +299,19 @@
                     addform(form);
                 }
             },
-            function list_page() {
+            function user_list_page() {
                 $.ajax({
                     url: _ctx + '/user/user_list_page',
                     type: "post",
-                    data: {"keywords": $("#Keywords").val()},
-                    success: function (date) {
+                    data: {"keywords": $("#keywords").val()},
+                    success: function (data) {
                         $('#ibox').html(data);
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                         toastr.error('', '조회 에러');
-                 }
+                     }
+                });
             });
-        });
 
         function addform(form) {
             $.ajax(

@@ -43,6 +43,10 @@ jQuery.validator.addMethod("isDigits", function (value, element) {
     return this.optional(element) || /^\d+$/.test(value);
 }, "숫자만 입력 가능합니다.");
 
+jQuery.validator.addMethod("isEngDi", function (value, element) {
+    return this.optional(element) || /^[A-Za-z|0-9]+$/.test(value);
+}, "영문과 숫자만 입력 가능합니다.");
+
 jQuery.validator.addMethod("isChinese", function (value, element) {
     return this.optional(element) || /^[\u0391-\uFFE5]+$/.test(value);
 }, "중국어를 포함합니다。");
@@ -53,7 +57,7 @@ jQuery.validator.addMethod("isEnglish", function (value, element) {
 
 jQuery.validator.addMethod("isMobile", function (value, element) {
     var length = value.length;
-    return this.optional(element) || (length == 11 && /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(value));
+    return this.optional(element) || (length == 11 && /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/.test(value));
 }, "휴대폰 번호가 유효하지 않습니다");
 
 jQuery.validator.addMethod("isPhone", function (value, element) {

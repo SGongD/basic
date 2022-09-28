@@ -39,7 +39,7 @@ public class Role implements BaseEntity<String> {
     private String code;
 
     /**
-     * 주목
+     * 주목(관리자, 사용자)
      */
     @TableField("remark")
     private String remark;
