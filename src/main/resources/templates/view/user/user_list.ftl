@@ -171,7 +171,7 @@
                         <div class="form-group">
                             <label class="control-label" for="order_id">비밀번호 입력</label>
                             <input name="userid" id="userid" type="hidden" value="">
-                            <input type="text" id="restcode" name="restcode" maxlength="6" placeholder="비밀번호를 입력하세요" class="form-control" value="">
+                            <input type="text" id="restcode" name="restcode" maxlength="6" placeholder="비밀번호를 입력하세요" class="form-control" value="${user.password}">
                         </div>
                         <div class="form-group m-t-sm" >
                                 <button class="btn btn-md btn-primary " type="submit"><strong>확인</strong></button>
@@ -376,7 +376,7 @@
             }
 
             $("#myModa-reset").on('show.bs.modal', function (event) {
-                var button=$(event.relatedTarget );
+                var button=$(event.relatedTarget);
                 var userid=button.data("userid");
                 $("#userid").val(userid);
                 $('#codeimg').attr("src","http://www.wulingtest.com:8780/jcaptcha")

@@ -98,4 +98,10 @@ public class User implements BaseEntity<String> {
     @TableField("remark")
     private String remark;
 
+    /**
+     * 회사명
+     */
+    @TableField("name")
+    private String name;
+
 }

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basicit.mapper.auth.CompanyMapper">
+
+    <resultMap id="companyMap" type="com.basicit.model.auth.Company">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.basicit.model.auth.Company">
+        <![CDATA[
+            insert into t_sys_company(id, name)
+            values (#{id}, #{name})
+        ]]>
+    </insert>
+
+    <sql id="find_xxx">
+        <![CDATA[
+            select id, name
+        ]]>
+    </sql>
+
+    <sql id="find_as_xxx">
+        <![CDATA[
+        select sc.id, sc.name
+        ]]>
+    </sql>
+
+    <sql id="from_xxx">
+        <![CDATA[
+            from t_sys_company
+        ]]>
+    </sql>
+
+    <sql id="where_xxx">
+        <![CDATA[
+            where 1=1
+        ]]>
+    </sql>
+
+    <select id="findById" parameterType="string" resultMap="companyMap">
+        <include refid="find_xxx"/>
+        <include refid="from_xxx"/>
+        where id=#{id}
+    </select>
+
+    <select id="findCompanyByUserId" parameterType="string" resultMap="companyMap">
+        <include refid="find_as_xxx"/>
+        from t_sys_company sc, t_sys_user_company uc where sc.id=uc.company_id and uc.user_id=#{userId}
+    </select>
+
+    <select id="findCompanyById" parameterType="string" resultMap="companyMap">
+        <include refid="find_xxx"/>
+        <include refid="from_xxx"/>
+        where id=#{id}
+    </select>
+
+    <select id="findAllByFilter" parameterType="Map" resultMap="companyMap">
+        <include refid="find_xxx"/>
+        <include refid="from_xxx"/>
+        <include refid="where_xxx"/>
+        <if test="start != null and limit != null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <select id="findAllByFilterCount" parameterType="Map" resultType="int">
+        select count(id)
+        <include refid="from_xxx"/>
+        <include refid="where_xxx"/>
+    </select>
+
+    <update id="update" parameterType="com.basicit.model.auth.Company">
+        update t_sys_role
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        delete
+        from t_sys_company
+        where id = #{id}
+    </delete>
+
+</mapper>

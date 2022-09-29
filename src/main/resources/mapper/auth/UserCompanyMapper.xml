@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basicit.mapper.auth.UserCompanyMapper">
+
+    <resultMap id="userCompanyMap" type="com.basicit.model.auth.UserCompany">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="companyId" column="company_id"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.basicit.model.auth.UserCompany">
+        insert into t_sys_user_company(id, user_id, company_id)
+        values  (#{id}, #{userId}, #{companyId})
+    </insert>
+
+    <sql id="find_xxx">
+	    <![CDATA[
+        select id, user_id, company_id
+        ]]>
+	</sql>
+
+    <sql id="from_xxx">
+	    <![CDATA[
+        from t_sys_user_company
+        ]]>
+	</sql>
+
+    <sql id="where_xxx">
+	    <![CDATA[
+        where 1=1
+        ]]>
+	</sql>
+
+    <select id="findById" parameterType="int" resultMap="userCompanyMap">
+        <include refid="find_xxx"/>
+        <include refid="from_xxx"/>
+        where id=#{id}
+    </select>
+
+    <select id="findAllByFilter" parameterType="Map" resultMap="userCompanyMap">
+        <include refid="find_xxx"/>
+        <include refid="from_xxx"/>
+        <include refid="where_xxx"/>
+        <if test="start != null and limit != null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <select id="findAllByFilterCount" parameterType="Map" resultType="int">
+        select count(id)
+        <include refid="from_xxx"/>
+        <include refid="where_xxx"/>
+    </select>
+
+    <update id="update" parameterType="com.basicit.model.auth.UserCompany">
+        update t_sys_user_company
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="companyId != null">
+                company_id = #{companyId}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        delete
+        from t_sys_user_company
+        where id in #{id}
+    </delete>
+
+</mapper>

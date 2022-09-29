@@ -52,9 +52,11 @@ public interface UserMapper extends BaseMapper<User> {
      */
     List<User> findUserByRoleCode(@Param("roleCode") String username);
 
+    List<User> findUserByCompanyId(@Param("companyCode") String username);
+
     /**
      * 페이지를 조회하는 쿼리
-     * 
+     *
      * @param page 페이지
      * @param keywords 키워드(검색어)
      * @return page 페이지
