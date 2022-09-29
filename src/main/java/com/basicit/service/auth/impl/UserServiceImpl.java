@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(rollbackFor = BusinessException.class)
     @Override
-    public void addUser(User user, Role role) {
+    public boolean addUser(User user, Role role) {
         if (user == null || role == null || StringUtils.isAnyBlank(user.getUsername(), user.getPassword())) {
             throw new BusinessException("user.registr.error", "잘못된 등록 정보");
         }
@@ -93,6 +93,7 @@ public class UserServiceImpl implements UserService {
         ur.setUserId(user.getId());
         ur.setId(FactoryAboutKey.getPK(TableEnum.T_SYS_USER_ROLE));
         userRoleMapper.insert(ur);
+        return false;
     }
 
     @Override

@@ -5,42 +5,47 @@
 
     <resultMap id="userMap" type="com.basicit.model.auth.User">
         <result column="id" property="id"/>
-        <result column="email" property="email"/>
         <result column="username" property="username"/>
         <result column="true_name" property="trueName"/>
         <result column="password" property="password"/>
         <result column="salt" property="salt"/>
+        <result column="phone_num" property="phoneNum"/>
         <result column="status" property="status"/>
         <result column="organize_id" property="organizeId"/>
         <result column="create_time" property="createTime"/>
         <result column="last_login_time" property="lastLoginTime"/>
         <result column="modify_time" property="modifyTime"/>
+        <result column="business" property="business"/>
+        <result column="remark" property="remark"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.basicit.model.auth.User">
-        insert into t_sys_user (id, create_time, email, last_login_time, modify_time, username, organize_id, `password`, salt, `status`, true_name)
-        values (#{id}, #{createTime}, #{email}, #{lastLoginTime}, #{modifyTime}, #{username}, #{organizeId}, #{password}, #{salt}, #{status}, #{trueName})
+        insert into t_sys_user (id, create_time, business, phone_num, last_login_time, modify_time, username, organize_id, `password`, salt, `status`, true_name)
+        values (#{id}, #{createTime}, #{business}, #{phoneNum}, #{lastLoginTime}, #{modifyTime}, #{username}, #{organizeId}, #{password}, #{salt}, #{status}, #{trueName})
     </insert>
 
     <sql id="find_xxx">
 	    <![CDATA[
-        select id,
-               create_time,
-               email,
-               last_login_time,
-               modify_time,
-               username,
-               organize_id,
-               `password`,
-               salt,
-               `status`,
-               true_name
+        select u.id,
+               u.create_time,
+               u.phone_num,
+               u.last_login_time,
+               u.modify_time,
+               u.username,
+               u.organize_id,
+               u.`password`,
+               u.salt,
+               u.`status`,
+               u.business,
+               u.true_name,
+               r.remark
         ]]>
 	</sql>
 
     <sql id="from_xxx">
 	    <![CDATA[
-        from t_sys_user
+        from t_sys_user u join t_sys_user_role ur on u.id = ur.user_id
+            join t_sys_role r on r.id = ur.role_id
         ]]>
 	</sql>
 
@@ -55,7 +60,7 @@
         <include refid="from_xxx"/>
         <![CDATA[
 			where id=#{id}
-		]]>
+		]]>nc
     </select>
 
     <select id="findUserByName" parameterType="string" resultMap="userMap">
@@ -89,7 +94,7 @@
     <select id="findUserByRoleCode" parameterType="string" resultMap="userMap">
         select u.id,
                u.create_time,
-               u.email,
+               u.phone_num,
                u.last_login_time,
                u.modify_time,
                u.username,
@@ -97,6 +102,7 @@
                u.`password`,
                u.salt,
                u.`status`,
+               u.business,
                u.true_name
         from t_sys_user u,
              t_sys_role r,
@@ -141,20 +147,23 @@
     <update id="update" parameterType="com.basicit.model.auth.User">
         update t_sys_user
         <set>
-            <if test="email != null">
-                email = #{email},
-            </if>
             <if test="username != null">
                 username = #{username},
             </if>
             <if test="trueName != null">
                 true_name = #{trueName},
             </if>
+            <if test="phoneNum != null">
+                phone_num = #{phoneNum},
+            </if>
             <if test="password != null">
                 password = #{password},
             </if>
             <if test="salt != null">
                 salt = #{salt},
+            </if>
+            <if test="business != null">
+                business = #{business},
             </if>
             <if test="status != null">
                 status = #{status},
@@ -172,7 +181,7 @@
                 modify_time = #{modifyTime}
             </if>
         </set>
-        where id = #{id}
+        where u.id = #{id}
     </update>
 
     <select id="findAllByFilter" parameterType="Map" resultMap="userMap">

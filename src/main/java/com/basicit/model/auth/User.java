@@ -51,16 +51,22 @@ public class User implements BaseEntity<String> {
     private String trueName;
 
     /**
-     * 우편
+     * 핸드폰번호
      */
-    @TableField("email")
-    private String email;
+    @TableField("phone_num")
+    private String phoneNum;
 
     /**
      * 부서 ID
      */
     @TableField("organize_id")
     private String organizeId;
+
+    /**
+     * 회사
+     */
+    @TableField("business")
+    private String business;
 
     /**
      * 상태：0=효율적인，1=유효하지 않은
@@ -85,5 +91,11 @@ public class User implements BaseEntity<String> {
      */
     @TableField("modify_time")
     private Date modifyTime;
+
+    /**
+     * 관리자 또는 사용자
+     */
+    @TableField("remark")
+    private String remark;
 
 }

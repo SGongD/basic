@@ -51,12 +51,6 @@ public class UserDTO implements BaseEntity<String> {
     private String trueName;
 
     /**
-     * 우편
-     */
-    @TableField("email")
-    private String email;
-
-    /**
      * 회사
      */
     @TableField("company")

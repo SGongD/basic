@@ -137,9 +137,7 @@
                     <strong>Copyright</strong> Example Company &copy; 2014-2015
                 </div>
             </div>
-
         </div>
-
     </div>
 
     <div class="modal fade" id="modal-form2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -245,6 +243,17 @@
         e.value = e.value.replace();
     }
 
+    function getFormData($form){
+        var unindexed_array = $form.serializeArray();
+        var indexed_array = {};
+
+        $.map(unindexed_array, function(n, i){
+            indexed_array[n['name']] = n['value'];
+        });
+
+        return indexed_array;
+    }
+
 
         $(document).ready(function () {
             $("#add").validate({
@@ -294,9 +303,9 @@
                     jiaos: "역할을 선택하세요",
                     terms: " "
                 },
-                //debug: true,
+                debug: true,
                 submitHandler: function (form) {
-                    addform(form);
+                    userAddform(form);
                 }
             },
             function user_list_page() {
@@ -313,19 +322,17 @@
                 });
             });
 
-        function addform(form) {
-            $.ajax(
-                    {
-                        url: "/user/user_list",
-                        type: "post",
-                        data: $(form).serialize(),
-                        success: function (data) {
-                            swal("사용자를 추가 했습니다", "", "success");
-                            //alert($(form).serialize())
-                        }
-                    }
-            );
-            return false;
+        function userAddform(form) {
+            var $form = $('#add')
+            var data = getFormData($form)
+            $.ajax({
+                url: "/view/user/user_add",
+                type: "post",
+                data: data,
+                success: function (data) {
+                    swal("사용자를 추가 했습니다", "", "success");
+                }
+            });
         }
 
 

@@ -1,7 +1,12 @@
 package com.basicit.web.controller;
 
+import com.basicit.POJO.UserPOJO;
 import com.basicit.framework.datasource.PageInfo;
+import com.basicit.mapper.auth.RoleMapper;
+import com.basicit.mapper.auth.UserMapper;
+import com.basicit.model.auth.Role;
 import com.basicit.model.auth.User;
+import com.basicit.service.auth.RoleService;
 import com.basicit.service.auth.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +15,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,11 +29,41 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RoleService roleService;
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+
+    @PostMapping("/view/user/user_add")
+    @ResponseBody
+    public Map<String, String> add(UserPOJO user) {
+        User savedUser = new User();
+        savedUser.setUsername(user.getUsername());
+        savedUser.setPassword(user.getUserPassword());
+        savedUser.setTrueName(user.getTrueName());
+        savedUser.setOrganizeId(user.getRole());
+        savedUser.setBusiness(user.getBusiness());
+        savedUser.setPhoneNum(user.getPhoneNum());
+        Role role = roleService.findRoleByCode(user.getRole());
+        boolean flag = userService.addUser(savedUser, role);
+        return getResultMap(flag);
+    }
+
+    private Map<String, String> getResultMap(boolean flag) {
+        Map<String, String> result = new HashMap<>();
+        if(flag) {
+            result.put("status", "1");
+            result.put("msg", "성공적으로 게시됨");
+        } else {
+            result.put("status", "0");
+            result.put("msg", "게시 실패");
+        }
+        return result;
     }
 
     @GetMapping("view/user/user_list")

@@ -3,8 +3,6 @@ package com.basicit.service.auth;
 import com.basicit.framework.datasource.PageInfo;
 import com.basicit.model.auth.Role;
 import com.basicit.model.auth.User;
-import com.basicit.model.simple.News;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,8 +19,9 @@ public interface UserService {
      *
      * @param user 사용자
      * @param role 역할
+     * @return
      */
-    void addUser(User user, Role role);
+    boolean addUser(User user, Role role);
 
     /**
      * 비밀번호 변경

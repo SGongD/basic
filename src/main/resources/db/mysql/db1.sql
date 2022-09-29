@@ -159,7 +159,7 @@ CREATE TABLE `t_sys_user` (
                               `password` varchar(255) DEFAULT NULL,
                               `salt` varchar(255) DEFAULT NULL,
                               `true_name` varchar(255) DEFAULT NULL,
-                              `email` varchar(255) DEFAULT NULL,
+                              `phone_num` varchar(255) DEFAULT NULL,
                               `organize_id` varchar(255) DEFAULT NULL,
                               `status` int DEFAULT NULL,
                               `last_login_time` datetime DEFAULT NULL,
@@ -177,6 +177,55 @@ LOCK TABLES `t_sys_user` WRITE;
 /*!40000 ALTER TABLE `t_sys_user` DISABLE KEYS */;
 INSERT INTO `t_sys_user` VALUES ('689046819489198080','admin','305a9ad8775117d4d918b469d543b0ef1bfa3108','0f9a69fb2f3a053d','관리자','newbie@basicit.com','689046813118050304',1,NULL,'2022-03-17 09:46:04',NULL),('689046819552112640','basic','305a9ad8775117d4d918b469d543b0ef1bfa3108','0f9a69fb2f3a053d','베이직','newbie@basicit.com','689046813180964864',1,NULL,'2022-03-17 09:46:04',NULL);
 /*!40000 ALTER TABLE `t_sys_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_sys_company`
+--
+
+DROP TABLE IF EXISTS `t_sys_company`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `t_sys_company` (
+                                 `id` varchar(32) NOT NULL,
+                                 `name` varchar(255) DEFAULT NULL,
+                                 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_sys_company`
+--
+
+LOCK TABLES `t_sys_company` WRITE;
+/*!40000 ALTER TABLE `t_sys_company` DISABLE KEYS */;
+INSERT INTO `t_sys_company` VALUES ('1','베이직인터네셔널'),('2','구글');
+/*!40000 ALTER TABLE `t_sys_company` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_sys_user_company`
+--
+
+DROP TABLE IF EXISTS `t_sys_user_company`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `t_sys_user_company` (
+                                      `id` varchar(32) NOT NULL,
+                                      `user_id` varchar(255) DEFAULT NULL,
+                                      `company_id` varchar(255) DEFAULT NULL,
+                                      PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_sys_user_company`
+--
+
+LOCK TABLES `t_sys_user_company` WRITE;
+/*!40000 ALTER TABLE `t_sys_user_company` DISABLE KEYS */;
+INSERT INTO `t_sys_user_company` VALUES ('231457233372731321','689046819489198080','1'),('627357960023115385','689046819552112640','2');
+/*!40000 ALTER TABLE `t_sys_user_company` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

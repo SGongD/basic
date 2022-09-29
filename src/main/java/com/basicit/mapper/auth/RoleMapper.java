@@ -32,4 +32,6 @@ public interface RoleMapper extends BaseMapper<Role> {
      */
     Role findRoleByCode(String code);
 
+    Role findRoleById(String Id);
+
 }

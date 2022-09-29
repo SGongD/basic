@@ -64,7 +64,6 @@ public class InitServiceTest {
 
             User admin = new User();
             admin.setUsername("admin");
-            admin.setEmail("infowangxin@163.com");
             admin.setTrueName("관리자");
             admin.setPassword(password);
             admin.setOrganizeId(adminRole.getId());
@@ -73,7 +72,6 @@ public class InitServiceTest {
             User nutcracker = new User();
             nutcracker.setUsername("nutcracker");
             nutcracker.setTrueName("Crackers");
-            nutcracker.setEmail("infowangxin@139.com");
             nutcracker.setPassword(password);
             nutcracker.setOrganizeId(commonRole.getId());
             userService.addUser(nutcracker, commonRole);

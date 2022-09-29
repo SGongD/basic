@@ -58,6 +58,12 @@
         where code=#{code}
     </select>
 
+    <select id="findRoleById" parameterType="string" resultMap="roleMap">
+        <include refid="find_xxx"/>
+        <include refid="from_xxx"/>
+        where id=#{id}
+    </select>
+
     <select id="findAllByFilter" parameterType="Map" resultMap="roleMap">
         <include refid="find_xxx"/>
         <include refid="from_xxx"/>

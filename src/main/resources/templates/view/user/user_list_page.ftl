@@ -20,9 +20,9 @@
                         <!-- model/auth/User.java 에서 따옴. -->
                         <td>${u.username}</td>
                         <td>${u.trueName}</td>
-                        <td>${u.email}</td>
-                        <td>${u.role}</td>
-                        <td>${u.company}</td>
+                        <td>${u.phoneNum}</td>
+                        <td>${u.remark}</td>
+                        <td>${u.business}</td>
                         <td>${u.createTime?string("yyyy-MM-dd HH:mm") }</td>
                         <td>
                             <a class="btn btn-primary btn-circle btn-sm" onclick="setState(this)" data-id="1"><i class="fa fa-check"></i></a>
