@@ -1,5 +1,6 @@
 package com.basicit;
 
+import com.basicit.model.auth.Company;
 import com.basicit.model.auth.Permission;
 import com.basicit.model.auth.Role;
 import com.basicit.model.auth.User;
@@ -59,8 +60,10 @@ public class InitServiceTest {
         try {
             Role adminRole = roleService.findRoleByCode(RoleEnumUtil.ADMIN_ROLE.getRoleCode());
             Role commonRole = roleService.findRoleByCode(RoleEnumUtil.COMMON_ROLE.getRoleCode());
+//            Company adminCompany = roleService.
 
             String password = "123456";
+
 
             User admin = new User();
             admin.setUsername("admin");

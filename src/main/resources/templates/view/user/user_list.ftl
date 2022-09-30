@@ -55,8 +55,8 @@
                                 <div class="tablesearch pull-right m-t-xs">
                                    <div class="table-td">
                                         <div class="input-group" >
-                                                <input type="text" class="input-sm form-control" id="keywords "name="keywords" value="" placeholder="검색어를 입력하세요">
-                                                <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary ">검색</button></span>
+                                                <input type="text" class="input-sm form-control" id="keywords" name="keywords" value="" placeholder="검색어를 입력하세요">
+                                                <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary" id="queryUserBtn">검색</button></span>
                                         </div>
                                    </div>
                                    <div class="table-td m-l-sm pull-right">
@@ -122,7 +122,7 @@
 
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="ibox">
+                        <div class="ibox" id="ibox">
                             <#include "/view/user/user_list_page.ftl"/>
                         </div>
                     </div>
@@ -256,6 +256,7 @@
 
 
         $(document).ready(function () {
+
             $("#add").validate({
 
                 rules: {
@@ -307,20 +308,26 @@
                 submitHandler: function (form) {
                     userAddform(form);
                 }
-            },
+            });
+
+
+            $("#queryUserBtn").click(function () {
+                user_list_page();
+            });
+
             function user_list_page() {
                 $.ajax({
-                    url: _ctx + '/user/user_list_page',
-                    type: "post",
+                    url: "/view/user/user_list_page",
+                    type: "POST",
                     data: {"keywords": $("#keywords").val()},
                     success: function (data) {
                         $('#ibox').html(data);
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                         toastr.error('', '조회 에러');
-                     }
+                    }
                 });
-            });
+            }
 
         function userAddform(form) {
             var $form = $('#add')

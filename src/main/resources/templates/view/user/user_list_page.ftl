@@ -14,8 +14,8 @@
             </tr>
             </thead>
             <tbody>
-            <#if upage?? && upage.records?? && (upage.records?size > 0) >
-                <#list upage.records as u>
+            <#if page?? && page.records?? && (page.records?size > 0) >
+                <#list page.records as u>
                     <tr>
                         <!-- model/auth/User.java 에서 따옴. -->
                         <td>${u.username}</td>
@@ -25,7 +25,7 @@
                         <td>${u.name}</td>
                         <td>${u.createTime?string("yyyy-MM-dd HH:mm") }</td>
                         <td>
-                            <a class="btn btn-primary btn-circle btn-sm" onclick="setState(this)" data-id="1"><i class="fa fa-check"></i></a>
+                            <a class="btn btn-primary btn-circle btn-sm" onclick="setState(this)" data-id="${u.id}"><i class="fa fa-check"></i></a>
                         </td>
                         <td class="text-right text-nowrap">
                             <div class="btn-group ">
@@ -41,7 +41,7 @@
         </table>
     </div>
     <form action="${ctx }/user/user_list_page" id="userPageForm">
-        <input type="hidden" value="${keywords!}" name="keywords"/>
+        <input type="hidden" value="${keywords! }" name="keywords"/>
         <#assign formId = "userPageForm">
         <#assign showPageId = "ibox">
         <#include "/common/page.ftl"/>

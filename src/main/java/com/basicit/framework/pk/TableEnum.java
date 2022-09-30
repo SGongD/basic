@@ -13,5 +13,7 @@ public enum TableEnum {
     T_SYS_ROLE_PERMISSION,
     T_SYS_USER,
     T_SYS_USER_ROLE,
-    T_NEWS
+    T_NEWS,
+    T_SYS_COMPANY,
+    T_SYS_USER_COMPANY
 }

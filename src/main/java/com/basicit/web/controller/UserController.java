@@ -2,8 +2,7 @@ package com.basicit.web.controller;
 
 import com.basicit.POJO.UserPOJO;
 import com.basicit.framework.datasource.PageInfo;
-import com.basicit.mapper.auth.RoleMapper;
-import com.basicit.mapper.auth.UserMapper;
+import com.basicit.model.auth.Company;
 import com.basicit.model.auth.Role;
 import com.basicit.model.auth.User;
 import com.basicit.service.auth.RoleService;
@@ -32,6 +31,8 @@ public class UserController {
     @Autowired
     private RoleService roleService;
 
+//    private CompanyService companyService;
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -50,6 +51,7 @@ public class UserController {
         savedUser.setBusiness(user.getBusiness());
         savedUser.setPhoneNum(user.getPhoneNum());
         Role role = roleService.findRoleByCode(user.getRole());
+//        Company company = companyService.findCompanyById(user.getCompany());
         boolean flag = userService.addUser(savedUser, role);
         return getResultMap(flag);
     }
@@ -68,17 +70,17 @@ public class UserController {
 
     @GetMapping("view/user/user_list")
     public String user_list(ModelMap usermap) {
-        PageInfo<User> upage = userService.findUserByPage(null, null);
-        log.info("pppppage = {}", upage);
-        usermap.put("upage", upage);
+        PageInfo<User> page = userService.findUserByPage(null, null);
+        log.info("pppppage = {}", page);
+        usermap.put("page", page);
         return "view/user/user_list";
     }
 
-    @PostMapping("/user/user_list_page")
+    @PostMapping("view/user/user_list_page")
     public String user_list_page(@RequestParam(value="keywords", required = false) String keywords, @RequestParam(value = "pageNum", required = false) Integer pageNum, ModelMap map) {
         log.info("#user pagination 쿼리 뉴스 pageNum={} , keywords={}", pageNum, keywords);
-        PageInfo<User> upage = userService.findUserByPage(pageNum, keywords);
-        map.put("upage", upage);
+        PageInfo<User> page = userService.findUserByPage(pageNum, keywords);
+        map.put("page", page);
         map.put("keywords", keywords);
         return "view/user/user_list_page";
     }

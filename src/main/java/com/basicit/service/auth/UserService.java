@@ -1,6 +1,7 @@
 package com.basicit.service.auth;
 
 import com.basicit.framework.datasource.PageInfo;
+import com.basicit.model.auth.Company;
 import com.basicit.model.auth.Role;
 import com.basicit.model.auth.User;
 

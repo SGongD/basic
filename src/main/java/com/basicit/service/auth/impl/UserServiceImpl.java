@@ -7,12 +7,8 @@ import com.basicit.framework.datasource.PageInfo;
 import com.basicit.framework.exception.BusinessException;
 import com.basicit.framework.pk.FactoryAboutKey;
 import com.basicit.framework.pk.TableEnum;
-import com.basicit.mapper.auth.RoleMapper;
-import com.basicit.mapper.auth.UserMapper;
-import com.basicit.mapper.auth.UserRoleMapper;
-import com.basicit.model.auth.Role;
-import com.basicit.model.auth.User;
-import com.basicit.model.auth.UserRole;
+import com.basicit.mapper.auth.*;
+import com.basicit.model.auth.*;
 import com.basicit.service.auth.UserService;
 import com.basicit.util.salt.Digests;
 import com.basicit.util.salt.Encodes;
@@ -48,6 +44,12 @@ public class UserServiceImpl implements UserService {
     private UserRoleMapper userRoleMapper;
 
     @Autowired
+    private UserCompanyMapper userCompanyMapper;
+
+    @Autowired
+    private CompanyMapper CompanyMapper;
+
+    @Autowired
     private UserMapper userMapper;
 
     /**
@@ -77,11 +79,17 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException("user.registr.error", "사용자가 조직 또는 역할을 지정하지 않음");
         }
 
+//        Company c = CompanyMapper.selectById(company.getId());
+//        if (c == null) {
+//            throw new BusinessException("user.registr.error", "사용자가 회사를 지정하지 않음");
+//        }
+
         User u = userMapper.findUserByName(user.getUsername());
         if (u != null) {
             throw new BusinessException("user.registr.error", "사용자 계정이 이미 존재합니다.,username=" + user.getUsername());
         }
 
+        // User_Role 자동추가 부분
         entryptPassword(user);
         user.setStatus(Constants.STATUS_VALID);
         user.setCreateTime(Calendar.getInstance().getTime());
@@ -93,6 +101,13 @@ public class UserServiceImpl implements UserService {
         ur.setUserId(user.getId());
         ur.setId(FactoryAboutKey.getPK(TableEnum.T_SYS_USER_ROLE));
         userRoleMapper.insert(ur);
+
+//        UserCompany uc = new UserCompany();
+//        uc.setCompanyId(r.getId());
+//        uc.setUserId(user.getId());
+//        uc.setId(FactoryAboutKey.getPK(TableEnum.T_SYS_USER_COMPANY));
+//        userCompanyMapper.insert(uc);
+
         return false;
     }
 

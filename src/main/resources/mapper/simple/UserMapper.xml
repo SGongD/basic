@@ -47,8 +47,7 @@
 	    <![CDATA[
         from t_sys_user u join t_sys_user_role ur on u.id = ur.user_id
             join t_sys_role r on r.id = ur.role_id
-            join t_sys_user_company uc on u.id = uc.user_id
-            join t_sys_company sc on sc.id = uc.company_id
+            join t_sys_company sc on sc.id = u.business
         ]]>
 	</sql>
 
@@ -80,7 +79,7 @@
         <where>
             <if test="keywords != null and keywords != ''">
                 <bind name="pattern" value="'%' + _parameter.keywords + '%'"/>
-                title like #{pattern}
+                true_name like #{pattern}
             </if>
         </where>
         order by create_time desc
@@ -142,7 +141,7 @@
         <where>
             <if test="keywords != null and keywords != ''">
                 <bind name="pattern" value="'%' + _parameter.keywords + '%'"/>
-                title like #{pattern}
+                true_name like #{pattern}
             </if>
         </where>
     </select>
