@@ -29,7 +29,7 @@
                         </td>
                         <td class="text-right text-nowrap">
                             <div class="btn-group ">
-                                <button class="btn btn-white btn-sm edit" data-userid="${u.id}" data-toggle="modal" data-target="#modal-form"><i class="fa fa-pencil"></i>  수정</button>
+                                <button class="btn btn-white btn-sm edit" data-userid="${u.id}" data-toggle="modal" data-target="#user-edit"><i class="fa fa-pencil"></i>  수정</button>
                                 <button class="btn-white  btn btn-sm rset" data-userid="${u.id}" data-toggle="modal" data-target="#myModa-reset"><i class="fa fa-eye"></i>  비밀번호 변경</button>
                                 <button class="btn-white  btn btn-sm delete" data-userid="${u.id}"><i class="fa fa-trash"></i>  삭제</button>
                             </div>

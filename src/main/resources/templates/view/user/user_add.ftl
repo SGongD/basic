@@ -1,4 +1,5 @@
 <div class="modal-body">
+    <input type="hidden" name="id" value="${user.id}"/>
     <form role="form" id="add" name="add" class="form-horizontal">
         <div class="form-group">
             <label class="col-sm-3 control-label">아이디</label>

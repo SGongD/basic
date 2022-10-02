@@ -146,6 +146,8 @@
             </div>
         </div>
     </div>
+
+
     <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -157,6 +159,19 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="user-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 class="modal-title">사용자 수정</h4>
+                </div>
+                <#include "/view/user/user_edit_form.ftl"/>
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal inmodal fade" id="myModa-reset" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-sm">
