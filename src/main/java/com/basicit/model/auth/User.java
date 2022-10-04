@@ -93,12 +93,6 @@ public class User implements BaseEntity<String> {
     private Date modifyTime;
 
     /**
-     * 관리자 또는 사용자
-     */
-    @TableField("remark")
-    private String remark;
-
-    /**
      * 회사명
      */
     @TableField("name")

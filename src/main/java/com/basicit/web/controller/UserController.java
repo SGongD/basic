@@ -1,8 +1,7 @@
 package com.basicit.web.controller;
 
-import com.basicit.POJO.UserPOJO;
+import com.basicit.POJO.UserPojo;
 import com.basicit.framework.datasource.PageInfo;
-import com.basicit.model.auth.Company;
 import com.basicit.model.auth.Role;
 import com.basicit.model.auth.User;
 import com.basicit.service.auth.RoleService;
@@ -31,7 +30,6 @@ public class UserController {
     @Autowired
     private RoleService roleService;
 
-//    private CompanyService companyService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -42,7 +40,7 @@ public class UserController {
 
     @PostMapping("/view/user/user_add")
     @ResponseBody
-    public Map<String, String> add(UserPOJO user) {
+    public Map<String, String> add(UserPojo user) {
         User savedUser = new User();
         savedUser.setUsername(user.getUsername());
         savedUser.setPassword(user.getUserPassword());
@@ -51,7 +49,6 @@ public class UserController {
         savedUser.setBusiness(user.getBusiness());
         savedUser.setPhoneNum(user.getPhoneNum());
         Role role = roleService.findRoleByCode(user.getRole());
-//        Company company = companyService.findCompanyById(user.getCompany());
         boolean flag = userService.addUser(savedUser, role);
         return getResultMap(flag);
     }
@@ -66,6 +63,21 @@ public class UserController {
             result.put("msg", "게시 실패");
         }
         return result;
+    }
+
+    @GetMapping("view/user/load/{id}")
+    public String load(@PathVariable String id, ModelMap map) {
+        log.info("# ajax사용자 객체 업로드");
+        User user = userService.findUserById(id);
+        map.addAttribute("user", user);
+        return "view/user/user_edit_form";
+    }
+
+    @PostMapping("/user/edit")
+    @ResponseBody
+    public Map<String, String> edit(@ModelAttribute("userForm") User user) {
+        boolean flag = userService.editUser(user);
+        return getResultMap(flag);
     }
 
     @GetMapping("view/user/user_list")

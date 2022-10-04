@@ -160,14 +160,17 @@
         </div>
     </div>
 
-    <div class="modal fade" id="user-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-primary">
                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
                     <h4 class="modal-title">사용자 수정</h4>
                 </div>
-                <#include "/view/user/user_edit_form.ftl"/>
+                <div class="modal-body">
+                    <form role="form" id="userForm" name="userForm" class="form-horizontal"></form>
+                </div>
+<#--                <#include "/view/user/user_edit_form.ftl"/>-->
             </div>
         </div>
     </div>
@@ -272,6 +275,12 @@
 
         $(document).ready(function () {
 
+            $("#userForm").validate({
+                submitHandler: function (form) {
+                    editForm(form);
+                }
+            });
+
             $("#add").validate({
 
                 rules: {
@@ -357,6 +366,17 @@
             });
         }
 
+        function editForm(form) {
+            $.ajax({
+                url: _ctx + "/user/edit",
+                type: "post",
+                data: $(form).serialize(),
+                success:function (data) {
+
+                }
+            });
+        }
+
 
             $("#resetform").validate({
                 rules: {
@@ -405,9 +425,14 @@
                 alert("userid = "+ userid);
             });
 
-
-
-
+            // edit버튼 클릭 시 alert창이 나오게 설정
+            $("#edit").on('show.bs.modal', function (event) {
+                var button=$(event.relatedTarget);
+                var userid = button.data("userid");
+                alert("userid = "+ userid);
+                $("#userForm").load('view/user/load/' + userid);
+                alert('view/user/load/' + userid);
+            });
 
             $("#myModa-reset").on('hidden.bs.modal', function (event) {
                 $(this).find("input").val("");

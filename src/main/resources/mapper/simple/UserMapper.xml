@@ -16,6 +16,9 @@
         <result column="last_login_time" property="lastLoginTime"/>
         <result column="modify_time" property="modifyTime"/>
         <result column="business" property="business"/>
+    </resultMap>
+
+    <resultMap id="userDTOMap" type="com.basicit.model.auth.UserDTO" extends="userMap">
         <result column="remark" property="remark"/>
     </resultMap>
 
@@ -73,7 +76,7 @@
 		]]>
     </select>
 
-    <select id="findUserByPage" parameterType="string" resultMap="userMap">
+    <select id="findUserByPage" parameterType="string" resultMap="userDTOMap">
         <include refid="find_xxx"/>
         <include refid="from_xxx"/>
         <where>

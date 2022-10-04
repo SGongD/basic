@@ -112,6 +112,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean editUser(User user) {
+        if(user != null && StringUtils.isNotBlank(user.getId())) {
+            int flag = userMapper.updateById(user);
+            return flag == 1;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public User findUserById(String id) {
+        if(StringUtils.isBlank(id)) {
+            return null;
+        } else {
+            return userMapper.selectById(id);
+        }
+    }
+
+
+    @Override
     public void updatePassword(User user) {
         if (log.isDebugEnabled()) {
             log.debug("## update User password.");

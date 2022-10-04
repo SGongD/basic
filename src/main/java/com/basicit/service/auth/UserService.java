@@ -65,4 +65,8 @@ public interface UserService {
     PageInfo<User> findUserByPage(Integer pageNum, String Keywords);
 
     List<User> findUserByKeywords(String keywords);
+
+    User findUserById(String userId);
+
+    boolean editUser(User user);
 }

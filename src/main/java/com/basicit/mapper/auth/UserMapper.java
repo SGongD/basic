@@ -3,7 +3,6 @@ package com.basicit.mapper.auth;
 import com.basicit.framework.datasource.PageInfo;
 import com.basicit.model.auth.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.basicit.model.simple.News;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
