@@ -368,7 +368,7 @@
 
         function editForm(form) {
             $.ajax({
-                url: _ctx + "/user/edit",
+                url: _ctx + "/user/user_edit_form",
                 type: "post",
                 data: $(form).serialize(),
                 success:function (data) {
