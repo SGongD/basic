@@ -92,10 +92,4 @@ public class User implements BaseEntity<String> {
     @TableField("modify_time")
     private Date modifyTime;
 
-    /**
-     * 회사명
-     */
-    @TableField("name")
-    private String name;
-
 }

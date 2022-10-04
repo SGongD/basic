@@ -240,6 +240,7 @@
         $(".chosen-select").trigger("chosen:updated");
 
     }
+
     function setState (ev) {
         var el = $(ev);
         var elclass=el[0].className;
@@ -273,10 +274,13 @@
     }
 
 
+
         $(document).ready(function () {
 
+            // #userForm에 불러온 정보를 저장
             $("#userForm").validate({
                 submitHandler: function (form) {
+                    console.log(form);
                     editForm(form);
                 }
             });
@@ -355,24 +359,38 @@
 
         function userAddform(form) {
             var $form = $('#add')
-            var data = getFormData($form)
+            var data = getFormData($form);
+            console.log(data);
             $.ajax({
                 url: "/view/user/user_add",
                 type: "post",
                 data: data,
                 success: function (data) {
                     swal("사용자를 추가 했습니다", "", "success");
+                    user_list_page();
+                    $('#modal-form').modal('hide');
                 }
             });
         }
 
         function editForm(form) {
+            var $form = $('#userForm');
+            var data = getFormData($form);
+            console.log(data);
             $.ajax({
-                url: _ctx + "/user/edit",
+                url: "/user/user_edit_form",
                 type: "post",
-                data: $(form).serialize(),
-                success:function (data) {
-
+                data: data,
+                success: function (data) {
+                    if(data.status == '1'){
+                        user_list_page();
+                        toastr.success('', data.msg);
+                        $('#edit').modal('hide');
+                    } else
+                        toastr.error('', data.msg);
+                },
+                error: function(data) {
+                    toastr.error('', '저장 실패');
                 }
             });
         }
@@ -417,6 +435,7 @@
                 return false;
             }
 
+
             $("#myModa-reset").on('show.bs.modal', function (event) {
                 var button=$(event.relatedTarget);
                 var userid=button.data("userid");
@@ -425,13 +444,12 @@
                 alert("userid = "+ userid);
             });
 
-            // edit버튼 클릭 시 alert창이 나오게 설정
+            // edit버튼 클릭 시 modal창이 나오게 설정
             $("#edit").on('show.bs.modal', function (event) {
-                var button=$(event.relatedTarget);
-                var userid = button.data("userid");
-                alert("userid = "+ userid);
-                $("#userForm").load('view/user/load/' + userid);
-                alert('view/user/load/' + userid);
+                var button = $(event.relatedTarget);
+                var userId = button.data("id");
+                alert("userid = "+ userId);
+                $("#userForm").load('/user/load/' + userId);
             });
 
             $("#myModa-reset").on('hidden.bs.modal', function (event) {

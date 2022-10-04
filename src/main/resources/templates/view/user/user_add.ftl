@@ -13,7 +13,7 @@
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">비밀번호 확인</label>
-            <div class="col-sm-8"><input type="password" placeholder="이메일을 입력하세요" class="form-control" id="password2"></div>
+            <div class="col-sm-8"><input type="password" name="password2" placeholder="이메일을 입력하세요" class="form-control" id="password2"></div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">이름</label>

@@ -65,7 +65,8 @@ public class UserController {
         return result;
     }
 
-    @GetMapping("view/user/load/{id}")
+
+    @GetMapping("/user/load/{id}")
     public String load(@PathVariable String id, ModelMap map) {
         log.info("# ajax사용자 객체 업로드");
         User user = userService.findUserById(id);
@@ -73,11 +74,19 @@ public class UserController {
         return "view/user/user_edit_form";
     }
 
-    @PostMapping("/user/edit")
+    @PostMapping("/user/user_edit_form")
     @ResponseBody
     public Map<String, String> edit(@ModelAttribute("userForm") User user) {
         boolean flag = userService.editUser(user);
         return getResultMap(flag);
+
+//        User editUser = new User();
+//        editUser.setTrueName(user.getTrueName());
+//        editUser.setPhoneNum(user.getPhoneNum());
+//        editUser.setBusiness(user.getBusiness());
+//        editUser.setOrganizeId(user.getRole());
+//        boolean flag = userService.editUser(editUser);
+//        return getResultMap(flag);
     }
 
     @GetMapping("view/user/user_list")

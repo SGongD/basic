@@ -44,12 +44,6 @@ public class UserServiceImpl implements UserService {
     private UserRoleMapper userRoleMapper;
 
     @Autowired
-    private UserCompanyMapper userCompanyMapper;
-
-    @Autowired
-    private CompanyMapper CompanyMapper;
-
-    @Autowired
     private UserMapper userMapper;
 
     /**

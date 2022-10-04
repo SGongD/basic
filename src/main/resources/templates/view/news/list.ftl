@@ -117,6 +117,7 @@
         $("#newsForm").validate({
             //debug: true,
             submitHandler: function (form) {
+                console.log(form);
                 editForm(form);
             }
         });

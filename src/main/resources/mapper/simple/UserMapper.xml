@@ -20,6 +20,7 @@
 
     <resultMap id="userDTOMap" type="com.basicit.model.auth.UserDTO" extends="userMap">
         <result column="remark" property="remark"/>
+        <result column="name" property="name"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.basicit.model.auth.User">
@@ -65,7 +66,7 @@
         <include refid="from_xxx"/>
         <![CDATA[
 			where id=#{id}
-		]]>nc
+		]]>
     </select>
 
     <select id="findUserByName" parameterType="string" resultMap="userMap">
