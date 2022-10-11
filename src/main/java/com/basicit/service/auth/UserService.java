@@ -1,6 +1,5 @@
 package com.basicit.service.auth;
 
-import com.basicit.POJO.UserListPojo;
 import com.basicit.framework.datasource.PageInfo;
 import com.basicit.model.auth.Company;
 import com.basicit.model.auth.Role;
@@ -55,13 +54,8 @@ public interface UserService {
      */
     List<User> findUsers();
 
-    /**
-     * 조건에 따라（정리하다、이름）쿼리 사용자
-     *
-     * @param shopId  조직 ID
-     * @param empName 사용자 이름
-     * @return
-     */
+    void deleteUser(String userId);
+
     List<User> findEmp(String shopId, String empName);
 
     PageInfo<User> findUserByPage(Integer pageNum, String Keywords);
@@ -79,4 +73,5 @@ public interface UserService {
     void encrypt(User user);
 
     void changePw(User user);
+
 }

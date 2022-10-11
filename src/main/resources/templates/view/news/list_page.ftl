@@ -37,7 +37,6 @@
 
     <form action="${ctx }/news/list_page" id="newsPageForm">
         <input type="hidden" value="${keywords! }" name="keywords"/>
-
         <#assign formId = "newsPageForm">
         <#assign showPageId = "ibox">
         <#include "/common/page.ftl"/>

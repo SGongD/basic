@@ -140,6 +140,8 @@
         </div>
     </div>
 
+    <input type="hidden" id="selectUserId" >
+
     <div class="modal fade" id="modal-form2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -252,6 +254,7 @@
         var el = $(ev);
         var elclass=el[0].className;
         var id=el.data("id");
+        var id=el.data("id");
 
         if (el.hasClass("btn-default")) {
             el.removeClass("btn-default").addClass("btn-primary");
@@ -259,7 +262,16 @@
             el.removeClass("btn-primary").addClass("btn-default");
         }
         toastr.success('사용자 상태를 변경했습니다', '작업성공');
-    };
+
+        $.ajax({
+
+        });
+    }
+
+    // DE1) DELETE :: user_list_page에서 가져온 id값을 front의 deleteUserId에 저장
+    function setSelectId (id) {
+        document.getElementById('selectUserId').value = id;
+    }
 
     function handleOnId(e) {
         e.value = e.value.replace(/[^A-Za-z0-9]/ig, '');
@@ -280,94 +292,92 @@
         return indexed_array;
     }
 
+    $(document).ready(function () {
 
-
-        $(document).ready(function () {
-
-            // #userForm에 불러온 정보를 저장
-            $("#userForm").validate({
-                submitHandler: function (form) {
-                    console.log(form);
-                    editForm(form);
-                }
-            });
-
-            $("#add").validate({
-
-                rules: {
-                    username: {
-                        required: true,
-                        isEngDi: true,
-                        rangelength: [6, 12],
-                    },
-                    userName: {
-                        required: true,
-                        rangelength: [3, 6]
-                    },
-                    phoneNum: {
-                        required: true,
-                        isMobile:true
-                    },
-                    userPassword: {
-                        required: true,
-                        rangelength: [6, 12]
-                    },
-                    password2: {
-                        required: true,
-                        rangelength: [6, 12],
-                        equalTo: "#userPassword"
-                    },
-                    business: "required",
-                    jiaos: "required",
-                    round: "required"
-                },
-                messages: {
-                    userName: {
-                        required: "아이디를 입력하세요",
-                        rangelength: jQuery.validator.format("6-12자 사이의 영어/숫자를 입력하세요"),
-                        remote: jQuery.validator.format("{0} is already in use"),
-                        isEngDi: jQuery.validator.format("영문과 숫자만 입력 가능합니다")
-                    },
-                    trueName: {
-                        required: "이름을 입력하세요",
-                        minlength: jQuery.validator.format("Enter at least {0} characters")
-                    },
-                    phoneNum: {
-                        required: "전화번호를 입력하세요",
-                        isMobile: "유효한 전화번호를 입력하세요"
-                    },
-                    sphoneNum: {
-                        required: "전화번호를 다시 한번입력하세요",
-                        equalTo: "전화번호가 일치하지 않습니다"
-                    },
-                    business: "회사를 선택하세요",
-                    jiaos: "역할을 선택하세요",
-                    terms: " "
-                },
-                debug: true,
-                submitHandler: function (form) {
-                    userAddform(form);
-                }
-            });
-
-
-            $("#queryUserBtn").click(function () {
-                user_list_page();
-            });
-
-            function user_list_page() {
-                $.ajax({
-                    url: "/view/user/user_list_page",
-                    type: "POST",
-                    data: {"keywords": $("#keywords").val()},
-                    success: function (data) {
-                        $('#ibox').html(data);
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        toastr.error('', '조회 에러');
-                    }
-                });
+        // #userForm에 불러온 정보를 저장
+        $("#userForm").validate({
+            submitHandler: function (form) {
+                console.log(form);
+                editForm(form);
             }
+        });
+
+        $("#add").validate({
+
+            rules: {
+                username: {
+                    required: true,
+                    isEngDi: true,
+                    rangelength: [6, 12],
+                },
+                userName: {
+                    required: true,
+                    rangelength: [3, 6]
+                },
+                phoneNum: {
+                    required: true,
+                    isMobile:true
+                },
+                userPassword: {
+                    required: true,
+                    rangelength: [6, 12]
+                },
+                password2: {
+                    required: true,
+                    rangelength: [6, 12],
+                    equalTo: "#userPassword"
+                },
+                business: "required",
+                jiaos: "required",
+                round: "required"
+            },
+            messages: {
+                userName: {
+                    required: "아이디를 입력하세요",
+                    rangelength: jQuery.validator.format("6-12자 사이의 영어/숫자를 입력하세요"),
+                    remote: jQuery.validator.format("{0} is already in use"),
+                    isEngDi: jQuery.validator.format("영문과 숫자만 입력 가능합니다")
+                },
+                trueName: {
+                    required: "이름을 입력하세요",
+                    minlength: jQuery.validator.format("Enter at least {0} characters")
+                },
+                phoneNum: {
+                    required: "전화번호를 입력하세요",
+                    isMobile: "유효한 전화번호를 입력하세요"
+                },
+                sphoneNum: {
+                    required: "전화번호를 다시 한번입력하세요",
+                    equalTo: "전화번호가 일치하지 않습니다"
+                },
+                business: "회사를 선택하세요",
+                jiaos: "역할을 선택하세요",
+                terms: " "
+            },
+            debug: true,
+            submitHandler: function (form) {
+                userAddform(form);
+            }
+        });
+
+
+        $("#queryUserBtn").click(function () {
+            user_list_page();
+        });
+
+        function user_list_page() {
+            $.ajax({
+                url: "/user/user_list_page",
+                type: "POST",
+                data: {"keywords": $("#keywords").val()},
+                success: function (data) {
+                    $('#ibox').html(data);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    toastr.error('', '조회 에러');
+                }
+            });
+        }
 
         function userAddform(form) {
             var $form = $('#add')
@@ -488,9 +498,10 @@
             });
 
 
+            // DE2) Delete ::
             $(document).on('click','#editable-sample button.delete', function () {
                 var row=$(this).parents("tr")[0];
-                var userid=$(this).data("id");
+                var userid = $(this).data("id");
                     swal({
                         title: "정말 삭제 하시겠습니까?",
                         text: "삭제후 복구 할수 없습니다",
@@ -500,12 +511,22 @@
                         confirmButtonText: "삭제",
                         closeOnConfirm: false
                     }, function () {
-                        delete_user(userid);
                         row.className="animated bounceOut";
-                        setTimeout(function(){
-                            row.className="animated fadeInLeft";
-                            },1000
-                        )
+                        $.ajax ({
+                            url: "/view/user/delete?userId="+userid,
+                            type: "delete",
+                            success: function (data) {
+                                swal("삭제가 완료되었습니다", "", "success");
+                                user_list_page();
+                            },
+                            error: function (data) {
+                                setTimeout(function(){
+                                        row.className="animated fadeInLeft";
+                                        swal("삭제에 실패였습니다", "아이디"+userid, "error");
+                                    },1000
+                                )
+                            }
+                        });
                     });
             });
     });

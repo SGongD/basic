@@ -13,5 +13,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UserCompanyMapper extends BaseMapper<UserCompany> {
-    public UserCompany findByUserId(String id);
+    public UserCompany findByUserId(String userId);
 }

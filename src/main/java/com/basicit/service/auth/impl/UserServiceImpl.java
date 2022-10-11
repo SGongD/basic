@@ -10,6 +10,8 @@ import com.basicit.framework.pk.FactoryAboutKey;
 import com.basicit.framework.pk.TableEnum;
 import com.basicit.mapper.auth.*;
 import com.basicit.model.auth.*;
+import com.basicit.service.auth.UserCompanyService;
+import com.basicit.service.auth.UserRoleService;
 import com.basicit.service.auth.UserService;
 import com.basicit.util.salt.Digests;
 import com.basicit.util.salt.Encodes;
@@ -42,16 +44,23 @@ public class UserServiceImpl implements UserService {
     private RoleMapper roleMapper;
 
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private UserMapper userMapper;
 
     @Autowired
-    private UserMapper userMapper;
+    private CompanyMapper companyMapper;
+
+    @Autowired
+    private UserRoleMapper userRoleMapper;
 
     @Autowired
     private UserCompanyMapper userCompanyMapper;
 
     @Autowired
-    private CompanyMapper companyMapper;
+    private UserRoleService userRoleService;
+
+    @Autowired
+    private UserCompanyService userCompanyService;
+
 
     /**
      * 안전한 비밀번호 설정，랜덤 생성 salt그리고 1024번 후에 sha-1 hash
@@ -75,7 +84,7 @@ public class UserServiceImpl implements UserService {
         userMapper.updateById(user);
     }
 
-    @Transactional(rollbackFor = BusinessException.class)
+
     @Override
     public boolean addUser(User user, Role role, Company company) {
         if (user == null || role == null ||  company == null ||StringUtils.isAnyBlank(user.getUsername(), user.getPassword())) {
@@ -198,6 +207,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findUsers() {
         return userMapper.findUsers();
+    }
+
+    @Transactional(rollbackFor = BusinessException.class)
+    @Override
+    public void deleteUser(String userId) {
+        UserRole ur = userRoleService.findByUserId(userId);
+        userRoleMapper.deleteById(ur);
+
+        UserCompany uc = userCompanyService.findByUserId(userId);
+        userCompanyMapper.deleteById(uc);
+
+        userMapper.deleteById(userId);
     }
 
     @Override

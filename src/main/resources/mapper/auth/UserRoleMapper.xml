@@ -38,6 +38,12 @@
         where id=#{id}
     </select>
 
+    <select id="findByUserId" parameterType="String" resultMap="userRoleMap">
+        <include refid="find_xxx"/>
+        <include refid="from_xxx"/>
+        where user_id=#{userId}
+    </select>
+
     <select id="findAllByFilter" parameterType="Map" resultMap="userRoleMap">
         <include refid="find_xxx"/>
         <include refid="from_xxx"/>

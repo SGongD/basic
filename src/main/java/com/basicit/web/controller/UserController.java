@@ -1,6 +1,5 @@
 package com.basicit.web.controller;
 
-import com.basicit.POJO.UserListPojo;
 import com.basicit.POJO.UserPojo;
 import com.basicit.POJO.UserPwPojo;
 import com.basicit.framework.datasource.PageInfo;
@@ -132,6 +131,7 @@ public class UserController {
         return getResultMap(flag);
     }
 
+
     @GetMapping("view/user/user_list")
     public String user_list(ModelMap userDTOmap) {
         PageInfo<User> page = userService.findUserByPage(null, null);
@@ -140,7 +140,7 @@ public class UserController {
         return "view/user/user_list";
     }
 
-    @PostMapping("view/user/user_list_page")
+    @PostMapping("/user/user_list_page")
     public String user_list_page(@RequestParam(value="keywords", required = false) String keywords, @RequestParam(value = "pageNum", required = false) Integer pageNum, ModelMap map) {
         log.info("#user pagination 쿼리 뉴스 pageNum={} , keywords={}", pageNum, keywords);
         PageInfo<User> page = userService.findUserByPage(pageNum, keywords);
@@ -149,9 +149,10 @@ public class UserController {
         return "view/user/user_list_page";
     }
 
-    @PostMapping("/user/delete/{userid}")
-    public String delete_user(String userid) {
-        log.info("#delete user = {}", userid);
+    @DeleteMapping("/view/user/delete")
+    public String deleteUser(@RequestParam String userId) {
+        log.info("#delete user = {}", userId);
+        userService.deleteUser(userId);
         return "view/user/user_list";
     }
 }
