@@ -57,18 +57,6 @@ public class UserDTO implements BaseEntity<String> {
     private String phoneNum;
 
     /**
-     * 부서 ID
-     */
-    @TableField("organize_id")
-    private String organizeId;
-
-    /**
-     * 회사
-     */
-    @TableField("business")
-    private String business;
-
-    /**
      * 상태：0=효율적인，1=유효하지 않은
      */
     @TableField("status")
@@ -95,13 +83,25 @@ public class UserDTO implements BaseEntity<String> {
     /**
      * 관리자 또는 사용자
      */
-    @TableField("remark")
-    private String remark;
+    @TableField("role_code")
+    private String roleCode;
+
+    /**
+     * 회사 ID
+     */
+    @TableField("company_id")
+    private String companyId;
 
     /**
      * 회사명
      */
-    @TableField("name")
-    private String name;
+    @TableField("company_name")
+    private String companyName;
+
+    /**
+     * 회사명
+     */
+    @TableField("role_remark")
+    private String roleRemark;
 
 }

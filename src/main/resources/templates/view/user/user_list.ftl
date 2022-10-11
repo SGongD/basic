@@ -170,7 +170,6 @@
                 <div class="modal-body">
                     <form role="form" id="userForm" name="userForm" class="form-horizontal"></form>
                 </div>
-<#--                <#include "/view/user/user_edit_form.ftl"/>-->
             </div>
         </div>
     </div>
@@ -182,17 +181,25 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
                     <h4 class="modal-title">비밀번호 변경</h4>
-                    <small>인증코드는 SMS로 사용자 휴대폰에 전송됩니다.</small>
+                    <small>기존 비밀번호와 새로운 비밀번호를 입력해주세요.</small>
                 </div>
                 <div class="modal-body">
                     <form name="resetform" id="resetform">
+                        <input name="id" id="id" type="hidden" value="${user.id}">
                         <div class="form-group">
-                            <label class="control-label" for="order_id">비밀번호 입력</label>
-                            <input name="userid" id="userid" type="hidden" value="">
-                            <input type="text" id="restcode" name="restcode" maxlength="6" placeholder="비밀번호를 입력하세요" class="form-control" value="${user.password}">
+                            <label class="control-label" for="order_id">기존 비밀번호 입력</label>
+                            <input type="password" id="oldPw" name="oldPw" maxlength="6" placeholder="비밀번호를 입력하세요" class="form-control" value="">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="order_id">변경 비밀번호 입력</label>
+                            <input type="password" id="newPw" name="newPw" maxlength="6" placeholder="비밀번호를 입력하세요" class="form-control" value="">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="order_id">변경 비밀번호 확인</label>
+                            <input type="password" id="newPw2" name="newPw2" maxlength="6" placeholder="비밀번호를 입력하세요" class="form-control" value="">
                         </div>
                         <div class="form-group m-t-sm" >
-                                <button class="btn btn-md btn-primary " type="submit"><strong>확인</strong></button>
+                                <button class="btn btn-md btn-primary" type="submit"><strong>확인</strong></button>
                                 <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">취소</button>
                         </div>
                     </form>
@@ -288,7 +295,7 @@
             $("#add").validate({
 
                 rules: {
-                    usseracc: {
+                    username: {
                         required: true,
                         isEngDi: true,
                         rangelength: [6, 12],
@@ -301,22 +308,27 @@
                         required: true,
                         isMobile:true
                     },
-                    sphoneNum: {
+                    userPassword: {
                         required: true,
-                        equalTo: "#phoneNum"
+                        rangelength: [6, 12]
+                    },
+                    password2: {
+                        required: true,
+                        rangelength: [6, 12],
+                        equalTo: "#userPassword"
                     },
                     business: "required",
                     jiaos: "required",
                     round: "required"
                 },
                 messages: {
-                    usseracc: {
+                    userName: {
                         required: "아이디를 입력하세요",
                         rangelength: jQuery.validator.format("6-12자 사이의 영어/숫자를 입력하세요"),
                         remote: jQuery.validator.format("{0} is already in use"),
                         isEngDi: jQuery.validator.format("영문과 숫자만 입력 가능합니다")
                     },
-                    userName: {
+                    trueName: {
                         required: "이름을 입력하세요",
                         minlength: jQuery.validator.format("Enter at least {0} characters")
                     },
@@ -373,10 +385,11 @@
             });
         }
 
+        // E2) Edit :: user_edit_form = #userForm(171)
         function editForm(form) {
             var $form = $('#userForm');
             var data = getFormData($form);
-            console.log(data);
+            // console.log(data);
             $.ajax({
                 url: "/user/user_edit_form",
                 type: "post",
@@ -398,15 +411,20 @@
 
             $("#resetform").validate({
                 rules: {
-                    restcode: {
+                    newPw: {
                         required: true,
-                        rangelength: [6, 6]
+                        rangelength: [6, 12]
+                    },
+                    newPw2: {
+                        required: true,
+                        rangelength: [6, 12],
+                        equalTo: "#newPw"
                     }
                 },
                 messages: {
-                    restcode: {
+                    newPw: {
                         required: "비밀번호를 입력하세요",
-                        rangelength: jQuery.validator.format("숫자 6자로 이루어진 비밀번호를 입력하세요"),
+                        rangelength: jQuery.validator.format("영문, 숫자로 혼합된 비밀번호를 입력하세요"),
                         remote: jQuery.validator.format("{0} is already in use")
                     }
                 },
@@ -416,19 +434,24 @@
                 }
             });
 
+            // PE2) Edit :: 비밀번호 변경
             function setform(form) {
+                var $form = $('#resetform');
+                var data = getFormData($form);
+                console.log(data);
                 $.ajax(
                     {
-                        url: "?",
+                        url: "/user/edit_password",
                         type: "post",
-                        data: $(form).serialize(),
+                        data: data,
                         success: function (data) {
-                            toastr.success('비밀번호를 SMS로 보냈습니다','작업성공');
-                            $("#myModa-reset").modal("hide");
-                        },
-                        error:function(error){
-                            $("#myModa-reset").modal("hide");
-                            toastr.error('비밀번호를 SMS로 보냈지 못했습니다！','작업실패');
+                            if(data == '1'){
+                                toastr.success('비밀번호 변경 Success','작업성공');
+                                $("#myModa-reset").modal("hide");
+                            } else {
+                                toastr.error('비밀번호 변경 Error', '작업실패');
+                                $("#myModa-reset").modal("hide");
+                            }
                         }
                     }
                 );
@@ -436,29 +459,38 @@
             }
 
 
-            $("#myModa-reset").on('show.bs.modal', function (event) {
-                var button=$(event.relatedTarget);
-                var userid=button.data("userid");
-                $("#userid").val(userid);
-                $('#codeimg').attr("src","http://www.wulingtest.com:8780/jcaptcha")
-                alert("userid = "+ userid);
-            });
-
-            // edit버튼 클릭 시 modal창이 나오게 설정
+            // E1) Modal :: user_list_page = #edit (User)
             $("#edit").on('show.bs.modal', function (event) {
+                // event를 발생시킨 요소와 관련된 요소를 반환
                 var button = $(event.relatedTarget);
+                // user_list_page에서 받은 data-id 요소의 값을 userId 변수에 대입
                 var userId = button.data("id");
-                alert("userid = "+ userId);
+                // alert("userid = "+ userId);
+                // 서버에서 데이터를 로드하고 반환된 HTML(user_edit_form)을 일치하는 요소에 넣음
                 $("#userForm").load('/user/load/' + userId);
             });
 
+
+
+            // PE1) Edit :: user_list_page = #myModa-reset (passWord)
+            $("#myModa-reset").on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var userId = button.data("id");
+                // input hidden에 id 이름이 id인 객체를 찾아 id값 반환
+                $("#id").val(userId);
+                // salt값
+            });
+
+            // PE3) Close :: hidden.bs.model 모달(팝업창)의 닫힘이 끝나고 실행되는 이벤트
             $("#myModa-reset").on('hidden.bs.modal', function (event) {
+                // input객체의 값을 없애준다.
                 $(this).find("input").val("");
             });
 
+
             $(document).on('click','#editable-sample button.delete', function () {
                 var row=$(this).parents("tr")[0];
-                var userid=$(this).data("userid");
+                var userid=$(this).data("id");
                     swal({
                         title: "정말 삭제 하시겠습니까?",
                         text: "삭제후 복구 할수 없습니다",
@@ -468,10 +500,10 @@
                         confirmButtonText: "삭제",
                         closeOnConfirm: false
                     }, function () {
+                        delete_user(userid);
                         row.className="animated bounceOut";
                         setTimeout(function(){
                             row.className="animated fadeInLeft";
-                            swal("삭제 실패", "아이디="+userid+" “삭제에 실패 했습니다","error");
                             },1000
                         )
                     });

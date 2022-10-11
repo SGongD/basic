@@ -57,18 +57,6 @@ public class User implements BaseEntity<String> {
     private String phoneNum;
 
     /**
-     * 부서 ID
-     */
-    @TableField("organize_id")
-    private String organizeId;
-
-    /**
-     * 회사
-     */
-    @TableField("business")
-    private String business;
-
-    /**
      * 상태：0=효율적인，1=유효하지 않은
      */
     @TableField("status")

@@ -9,6 +9,6 @@ public class UserPojo {
     private String trueName;
     private String phoneNum;
     private String business;
+    // private String companyId;
     private String role;
-    private String remark;
 }

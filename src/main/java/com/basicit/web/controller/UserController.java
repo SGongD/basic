@@ -1,11 +1,19 @@
 package com.basicit.web.controller;
 
+import com.basicit.POJO.UserListPojo;
 import com.basicit.POJO.UserPojo;
+import com.basicit.POJO.UserPwPojo;
 import com.basicit.framework.datasource.PageInfo;
+import com.basicit.model.auth.Company;
 import com.basicit.model.auth.Role;
 import com.basicit.model.auth.User;
+import com.basicit.model.auth.UserDTO;
+import com.basicit.service.auth.CompanyService;
 import com.basicit.service.auth.RoleService;
 import com.basicit.service.auth.UserService;
+import com.basicit.service.auth.impl.UserServiceImpl;
+import com.basicit.util.salt.Digests;
+import com.basicit.util.salt.Encodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +38,9 @@ public class UserController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private CompanyService companyService;
+
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -45,11 +56,45 @@ public class UserController {
         savedUser.setUsername(user.getUsername());
         savedUser.setPassword(user.getUserPassword());
         savedUser.setTrueName(user.getTrueName());
-        savedUser.setOrganizeId(user.getRole());
-        savedUser.setBusiness(user.getBusiness());
         savedUser.setPhoneNum(user.getPhoneNum());
         Role role = roleService.findRoleByCode(user.getRole());
-        boolean flag = userService.addUser(savedUser, role);
+        Company company = companyService.findCompanyById(user.getBusiness());
+        boolean flag = userService.addUser(savedUser, role, company);
+        return getResultMap(flag);
+    }
+
+    @PostMapping("/user/edit_password")
+    @ResponseBody
+    public boolean edit_password(UserPwPojo pwPojo) {
+        // UserPwPojo 정보를 불러옴
+        // existUser 생성 (UserDTO속성을 다 가져옴)
+        User existUser = userService.findUserById2(pwPojo.getId());
+
+        User user = new User();
+
+        //
+        byte[] hashPassword = Digests.sha1(pwPojo.getOldPw().getBytes(), Encodes.decodeHex(existUser.getSalt()),
+                                            UserServiceImpl.HASH_INTERATIONS);
+        user.setPassword(Encodes.encodeHex(hashPassword));
+
+        if(!(user.getPassword()).equals(existUser.getPassword())) {
+            return false;
+        }
+
+        existUser.setPassword(pwPojo.getNewPw());
+        existUser.setSalt(null);
+
+        userService.encrypt(existUser);
+        userService.changePw(existUser);
+
+        return true;
+    }
+
+
+    public Map<String, String> edit_password(@ModelAttribute("resetform") User user) {
+        log.info("user = ", user);
+        userService.updatePassword(user);
+        boolean flag = userService.editUser(user);
         return getResultMap(flag);
     }
 
@@ -66,34 +111,32 @@ public class UserController {
     }
 
 
+    // 사용자 수정 버튼을 누를 시 load
     @GetMapping("/user/load/{id}")
+    // @PathVariable : 경로의 특정 위치 값이 고정되지 않고 달라질 때 사용하는 것 {id}
     public String load(@PathVariable String id, ModelMap map) {
         log.info("# ajax사용자 객체 업로드");
-        User user = userService.findUserById(id);
+        // id값을 받아와 user 정보 값을 찾아서 대입
+        UserDTO user = userService.findUserById(id);
+        log.info("pageLoad :: UserDTO = " + user);
+        // addAttribute: hashMap형태로 데이터를 key-value 꼴로 Return 해준다.
+        // map이라는 것은 Key - Value 두 쌍으로 데이터를 보관하는 자료구조(Key는 유일한 값)
         map.addAttribute("user", user);
         return "view/user/user_edit_form";
     }
 
     @PostMapping("/user/user_edit_form")
     @ResponseBody
-    public Map<String, String> edit(@ModelAttribute("userForm") User user) {
-        boolean flag = userService.editUser(user);
+    public Map<String, String> edit(@ModelAttribute("userForm") UserDTO user) {
+        boolean flag = userService.editFullUser(user);
         return getResultMap(flag);
-
-//        User editUser = new User();
-//        editUser.setTrueName(user.getTrueName());
-//        editUser.setPhoneNum(user.getPhoneNum());
-//        editUser.setBusiness(user.getBusiness());
-//        editUser.setOrganizeId(user.getRole());
-//        boolean flag = userService.editUser(editUser);
-//        return getResultMap(flag);
     }
 
     @GetMapping("view/user/user_list")
-    public String user_list(ModelMap usermap) {
+    public String user_list(ModelMap userDTOmap) {
         PageInfo<User> page = userService.findUserByPage(null, null);
         log.info("pppppage = {}", page);
-        usermap.put("page", page);
+        userDTOmap.put("page", page);
         return "view/user/user_list";
     }
 
@@ -104,5 +147,11 @@ public class UserController {
         map.put("page", page);
         map.put("keywords", keywords);
         return "view/user/user_list_page";
+    }
+
+    @PostMapping("/user/delete/{userid}")
+    public String delete_user(String userid) {
+        log.info("#delete user = {}", userid);
+        return "view/user/user_list";
     }
 }

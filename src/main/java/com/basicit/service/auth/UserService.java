@@ -1,9 +1,11 @@
 package com.basicit.service.auth;
 
+import com.basicit.POJO.UserListPojo;
 import com.basicit.framework.datasource.PageInfo;
 import com.basicit.model.auth.Company;
 import com.basicit.model.auth.Role;
 import com.basicit.model.auth.User;
+import com.basicit.model.auth.UserDTO;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ public interface UserService {
      * @param role 역할
      * @return
      */
-    boolean addUser(User user, Role role);
+    boolean addUser(User user, Role role, Company company);
 
     /**
      * 비밀번호 변경
@@ -66,7 +68,15 @@ public interface UserService {
 
     List<User> findUserByKeywords(String keywords);
 
-    User findUserById(String userId);
+    UserDTO findUserById(String userId);
+
+    User findUserById2(String id);
 
     boolean editUser(User user);
+
+    boolean editFullUser(UserDTO user);
+
+    void encrypt(User user);
+
+    void changePw(User user);
 }

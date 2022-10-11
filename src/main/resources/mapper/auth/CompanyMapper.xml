@@ -8,6 +8,12 @@
         <result property="name" column="name"/>
     </resultMap>
 
+    <resultMap id="companyDTOMap" type="com.basicit.POJO.UserListPojo" extends="companyMap" >
+        <result column="company_id" property="companyId"/>
+        <result column="company_name" property="companyName"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+
     <insert id="insert" parameterType="com.basicit.model.auth.Company">
         <![CDATA[
             insert into t_sys_company(id, name)
@@ -23,13 +29,13 @@
 
     <sql id="find_as_xxx">
         <![CDATA[
-        select sc.id, sc.name
+        select id, name
         ]]>
     </sql>
 
     <sql id="from_xxx">
         <![CDATA[
-            from t_sys_company
+        from t_sys_company
         ]]>
     </sql>
 
@@ -43,6 +49,13 @@
         <include refid="find_xxx"/>
         <include refid="from_xxx"/>
         where id=#{id}
+    </select>
+
+    <select id="findCompanyByUserId" parameterType="string" resultMap="companyMap">
+        select sc.id as company_id, sc.name as company_name
+        from t_sys_company sc
+        join t_sys_user_company uc on sc.id = uc.company_id
+        where uc.user_id=#{userId}
     </select>
 
     <select id="findCompanyByUserId" parameterType="string" resultMap="companyMap">
@@ -72,7 +85,7 @@
     </select>
 
     <update id="update" parameterType="com.basicit.model.auth.Company">
-        update t_sys_role
+        update t_sys_company
         <set>
             <if test="name != null">
                 name = #{name},

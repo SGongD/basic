@@ -21,8 +21,8 @@
                         <td>${u.username}</td>
                         <td>${u.trueName}</td>
                         <td>${u.phoneNum}</td>
-                        <td>${u.remark}</td>
-                        <td>${u.name}</td>
+                        <td>${u.roleRemark}</td>
+                        <td>${u.companyName}</td>
                         <td>${u.createTime?string("yyyy-MM-dd HH:mm") }</td>
                         <td>
                             <a class="btn btn-primary btn-circle btn-sm" onclick="setState(this)" data-id="${u.id}"><i class="fa fa-check"></i></a>
@@ -31,7 +31,7 @@
                             <div class="btn-group ">
                                 <button class="btn btn-white btn-sm edit" data-id="${u.id}" data-toggle="modal" data-target="#edit"><i class="fa fa-pencil"></i>수정</button>
                                 <button class="btn-white  btn btn-sm rset" data-id="${u.id}" data-toggle="modal" data-target="#myModa-reset"><i class="fa fa-eye"></i>  비밀번호 변경</button>
-                                <button class="btn-white  btn btn-sm delete" data-id="${u.id}"><i class="fa fa-trash"></i>  삭제</button>
+                                <button class="btn-white  btn btn-sm delete" data-id="${u.id} "><i class="fa fa-trash"></i>  삭제</button>
                             </div>
                         </td>
                     </tr>

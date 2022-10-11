@@ -13,4 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserRoleMapper extends BaseMapper<UserRole> {
 
+    public UserRole findByUserId(String id);
+
 }

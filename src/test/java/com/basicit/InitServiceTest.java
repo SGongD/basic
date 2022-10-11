@@ -60,24 +60,26 @@ public class InitServiceTest {
         try {
             Role adminRole = roleService.findRoleByCode(RoleEnumUtil.ADMIN_ROLE.getRoleCode());
             Role commonRole = roleService.findRoleByCode(RoleEnumUtil.COMMON_ROLE.getRoleCode());
+
 //            Company adminCompany = roleService.
 
             String password = "123456";
+            String Business  = "1";
 
 
             User admin = new User();
             admin.setUsername("admin");
             admin.setTrueName("관리자");
             admin.setPassword(password);
-            admin.setOrganizeId(adminRole.getId());
-            userService.addUser(admin, adminRole);
+//            admin.setOrganizeId(adminRole.getId());
+//            userService.addUser(admin, adminRole, Business);
 
             User nutcracker = new User();
             nutcracker.setUsername("nutcracker");
             nutcracker.setTrueName("Crackers");
             nutcracker.setPassword(password);
-            nutcracker.setOrganizeId(commonRole.getId());
-            userService.addUser(nutcracker, commonRole);
+//            nutcracker.setOrganizeId(commonRole.getId());
+//            userService.addUser(nutcracker, commonRole, Business);
         } catch (Exception e) {
             e.printStackTrace();
         }

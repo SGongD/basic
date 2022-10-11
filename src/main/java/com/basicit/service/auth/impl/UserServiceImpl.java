@@ -1,6 +1,7 @@
 package com.basicit.service.auth.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.basicit.POJO.UserListPojo;
 import com.basicit.framework.constant.Constants;
 import com.basicit.framework.datasource.DataSourceTagger;
 import com.basicit.framework.datasource.PageInfo;
@@ -46,6 +47,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private UserCompanyMapper userCompanyMapper;
+
+    @Autowired
+    private CompanyMapper companyMapper;
+
     /**
      * 안전한 비밀번호 설정，랜덤 생성 salt그리고 1024번 후에 sha-1 hash
      */
@@ -53,19 +60,26 @@ public class UserServiceImpl implements UserService {
         byte[] salt = Digests.generateSalt(SALT_SIZE);
         user.setSalt(Encodes.encodeHex(salt));
 
+        // 비밀번호 바꿔주는 거.
         byte[] hashPassword = Digests.sha1(user.getPassword().getBytes(), salt, HASH_INTERATIONS);
         user.setPassword(Encodes.encodeHex(hashPassword));
     }
 
+    @Override
+    public void encrypt(User user) {
+        entryptPassword(user);
+    }
+
+    @Override
+    public void changePw(User user) {
+        userMapper.updateById(user);
+    }
+
     @Transactional(rollbackFor = BusinessException.class)
     @Override
-    public boolean addUser(User user, Role role) {
-        if (user == null || role == null || StringUtils.isAnyBlank(user.getUsername(), user.getPassword())) {
+    public boolean addUser(User user, Role role, Company company) {
+        if (user == null || role == null ||  company == null ||StringUtils.isAnyBlank(user.getUsername(), user.getPassword())) {
             throw new BusinessException("user.registr.error", "잘못된 등록 정보");
-        }
-
-        if (StringUtils.isBlank(role.getId())) {
-            throw new BusinessException("user.registr.error", "사용자가 역할을 지정하지 않음");
         }
 
         Role r = roleMapper.selectById(role.getId());
@@ -73,10 +87,11 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException("user.registr.error", "사용자가 조직 또는 역할을 지정하지 않음");
         }
 
-//        Company c = CompanyMapper.selectById(company.getId());
-//        if (c == null) {
-//            throw new BusinessException("user.registr.error", "사용자가 회사를 지정하지 않음");
-//        }
+        Company c = companyMapper.selectById(company.getId());
+
+        if (c == null) {
+            throw new BusinessException("user.registr.error", "사용자가 회사를 지정하지 않음, username=" + user.getUsername());
+        }
 
         User u = userMapper.findUserByName(user.getUsername());
         if (u != null) {
@@ -96,17 +111,17 @@ public class UserServiceImpl implements UserService {
         ur.setId(FactoryAboutKey.getPK(TableEnum.T_SYS_USER_ROLE));
         userRoleMapper.insert(ur);
 
-//        UserCompany uc = new UserCompany();
-//        uc.setCompanyId(r.getId());
-//        uc.setUserId(user.getId());
-//        uc.setId(FactoryAboutKey.getPK(TableEnum.T_SYS_USER_COMPANY));
-//        userCompanyMapper.insert(uc);
+        UserCompany uc = new UserCompany();
+        uc.setCompanyId(c.getId());
+        uc.setUserId(user.getId());
+        uc.setId(FactoryAboutKey.getPK(TableEnum.T_SYS_USER_COMPANY));
+        userCompanyMapper.insert(uc);
 
         return false;
     }
 
     @Override
-    public boolean editUser(User user) {
+    public boolean editUser(User user) { // update
         if(user != null && StringUtils.isNotBlank(user.getId())) {
             int flag = userMapper.updateById(user);
             return flag == 1;
@@ -116,20 +131,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserById(String id) {
-        if(StringUtils.isBlank(id)) {
-            return null;
+    public boolean editFullUser(UserDTO user) {
+        if(user != null && StringUtils.isNotBlank(user.getId())) {
+            userMapper.updateByFullId(user);
+            int flag = 1;
+            return flag == 1;
         } else {
-            return userMapper.selectById(id);
+            return false;
         }
     }
 
+
+    @Override
+    public UserDTO findUserById(String id) {
+        if(StringUtils.isBlank(id)) {
+            return null;
+        } else {
+//            return userMapper.selectById(id);
+            return userMapper.findUserById(id);
+        }
+    }
+
+    @Override
+    public User findUserById2(String id) {
+        if(StringUtils.isBlank(id)) {
+            return null;
+        } else {
+            return userMapper.findUserById2(id);
+        }
+    }
 
     @Override
     public void updatePassword(User user) {
         if (log.isDebugEnabled()) {
             log.debug("## update User password.");
         }
+        entryptPassword(user);
         User u = userMapper.selectById(user.getId());
         u.setPassword(user.getPassword());
         entryptPassword(u);
@@ -189,4 +226,6 @@ public class UserServiceImpl implements UserService {
         PageInfo<User> page = new PageInfo<>(pageNum, Constants.PAGE_SIZE);
         return userMapper.findUserByPage(page, keywords);
     }
+
+
 }

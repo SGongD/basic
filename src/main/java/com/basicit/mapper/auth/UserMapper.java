@@ -1,8 +1,10 @@
 package com.basicit.mapper.auth;
 
+import com.basicit.POJO.UserListPojo;
 import com.basicit.framework.datasource.PageInfo;
 import com.basicit.model.auth.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.basicit.model.auth.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,6 +21,12 @@ public interface UserMapper extends BaseMapper<User> {
 
     User findUserByName(String username);
 
+    UserDTO findUserById(String userId);
+
+    User findUserById2(String id);
+
+
+    int updateByFullId(UserDTO user);
     /**
      * 조직의 모든 사용자 쿼리
      *

@@ -64,6 +64,11 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.findRoleByUserId(userId);
     }
 
+//    @Override
+//    public Role findRoleById(String userId) {
+//        return roleMapper.findRoleById(userId);
+//    }
+
     @Override
     public void addRolePermission(String roleCode, String permissionKey) {
         Role role = findRoleByCode(roleCode);
