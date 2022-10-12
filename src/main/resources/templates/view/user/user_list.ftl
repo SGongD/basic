@@ -291,7 +291,7 @@
                     },
                     userName: {
                         required: true,
-                        rangelength: [3, 6]
+                        rangelength: [6, 12]
                     },
                     phoneNum: {
                         required: true,
@@ -382,7 +382,7 @@
                 rules: {
                     restcode: {
                         required: true,
-                        rangelength: [6, 6]
+                        rangelength: [6, 12]
                     }
                 },
                 messages: {
