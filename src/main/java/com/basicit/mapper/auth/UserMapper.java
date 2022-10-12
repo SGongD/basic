@@ -1,5 +1,6 @@
 package com.basicit.mapper.auth;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.basicit.POJO.UserListPojo;
 import com.basicit.framework.datasource.PageInfo;
 import com.basicit.model.auth.User;
@@ -72,4 +73,9 @@ public interface UserMapper extends BaseMapper<User> {
 
     List<User> findUserByKeywords(@Param("keywords") String keywords);
 
+    int updateState(String userId);
+
+    User findStateById(String userid);
+
+    public PageInfo<UserListPojo> searchUsers(PageInfo<UserListPojo> page, String searchName, String searchPhone, String searchCompany, String searchRole);
 }

@@ -1,5 +1,7 @@
 package com.basicit.service.auth;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.basicit.POJO.UserListPojo;
 import com.basicit.framework.datasource.PageInfo;
 import com.basicit.model.auth.Company;
 import com.basicit.model.auth.Role;
@@ -66,6 +68,8 @@ public interface UserService {
 
     User findUserById2(String id);
 
+    int updateStatus(String userId);
+
     boolean editUser(User user);
 
     boolean editFullUser(UserDTO user);
@@ -74,4 +78,5 @@ public interface UserService {
 
     void changePw(User user);
 
+    public PageInfo<UserListPojo> searchUsers(Integer pageNum, String searchName, String searchPhone, String searchCompany, String searchRole);
 }

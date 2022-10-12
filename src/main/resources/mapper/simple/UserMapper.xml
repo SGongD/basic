@@ -17,6 +17,17 @@
     </resultMap>
 
     <resultMap id="userDTOMap" type="com.basicit.model.auth.UserDTO" extends="userMap">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="true_name" property="trueName"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
+        <result column="phone_num" property="phoneNum"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+        <result column="modify_time" property="modifyTime"/>
+
         <result column="company_id" property="companyId"/>
         <result column="company_name" property="companyName"/>
         <result column="role_code" property="roleCode"/>
@@ -95,6 +106,10 @@
         select * from t_sys_user where id=#{id}
     </select>
 
+    <select id="findStateById" parameterType="string" resultMap="userMap">
+        select status from t_sys_user where id=#{userid}
+    </select>
+
     <select id="findUserByPage" parameterType="string" resultMap="userDTOMap">
         <include refid="find_xxx"/>
         <include refid="from_xxx"/>
@@ -113,6 +128,30 @@
         <![CDATA[
 			where organize_id=#{organizeId}
 		]]>
+    </select>
+
+    <select id="searchUsers" resultMap="userDTOMap">
+        <include refid="find_xxx"/>
+        <include refid="from_xxx"/>
+        <where>
+            <if test="searchName != null and searchName != ''">
+                <bind name="A" value="'%' + _parameter.searchName + '%'"/>
+                u.true_name like #{A}
+            </if>
+            <if test="searchPhone != null and searchPhone != ''">
+                <bind name="B" value="'%' + _parameter.searchPhone + '%'"/>
+                and u.phone_num like #{B}
+            </if>
+            <if test="searchCompany != null and searchCompany != ''">
+                <bind name="C" value="'%' + _parameter.searchCompany + '%'"/>
+                and uc.company_id like #{C}
+            </if>
+            <if test="searchRole != null and searchRole != ''">
+                <bind name="D" value="'%' + _parameter.searchRole + '%'"/>
+                and r.code like #{D}
+            </if>
+        </where>
+        order by create_time desc
     </select>
 
     <select id="findUserByRoleCode" parameterType="string" resultMap="userMap">
@@ -248,6 +287,13 @@
             </if>
         </set>
         where u.id = #{id}
+    </update>
+
+    <update id="updateState" parameterType="com.basicit.model.auth.User">
+        update t_sys_user
+        set status =
+            if ("1" = (select status from (select status from t_sys_user where id=#{userId}) tmp), "0", "1")
+        where id = #{userId}
     </update>
 
     <select id="findAllByFilter" parameterType="Map" resultMap="userMap">

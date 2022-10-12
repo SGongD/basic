@@ -1,6 +1,7 @@
 package com.basicit.service.auth.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.basicit.POJO.UserListPojo;
 import com.basicit.framework.constant.Constants;
 import com.basicit.framework.datasource.DataSourceTagger;
@@ -82,6 +83,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePw(User user) {
         userMapper.updateById(user);
+    }
+
+    @Override
+    public PageInfo<UserListPojo> searchUsers(Integer pageNum,String searchName, String searchPhone, String searchCompany, String searchRole) {
+        PageInfo<UserListPojo> searchPage = searchByPage(pageNum, searchName, searchPhone, searchCompany, searchRole);
+        log.info("#User Database searchPage={}", searchPage);
+        return searchPage;
+    }
+
+    @DS(DataSourceTagger.DB1)
+    private PageInfo<UserListPojo> searchByPage(Integer pageNum, String searchName, String searchPhone, String searchCompany, String searchRole) {
+        log.debug("# pageNum={},searchName={},searchPhone={},searchCompany={},searchRole={}", pageNum, searchName, searchPhone, searchCompany, searchRole);
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        PageInfo<UserListPojo> page = new PageInfo<>(pageNum, Constants.PAGE_SIZE);
+        return userMapper.searchUsers(page, searchName, searchPhone, searchCompany, searchRole);
     }
 
 
@@ -171,6 +189,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int updateStatus(String userId) { return userMapper.updateState(userId); }
+
+    @Override
     public void updatePassword(User user) {
         if (log.isDebugEnabled()) {
             log.debug("## update User password.");
@@ -247,6 +268,7 @@ public class UserServiceImpl implements UserService {
         PageInfo<User> page = new PageInfo<>(pageNum, Constants.PAGE_SIZE);
         return userMapper.findUserByPage(page, keywords);
     }
+
 
 
 }

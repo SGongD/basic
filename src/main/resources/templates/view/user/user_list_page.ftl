@@ -25,7 +25,8 @@
                         <td>${u.companyName}</td>
                         <td>${u.createTime?string("yyyy-MM-dd HH:mm")}</td>
                         <td>
-                            <a class="btn btn-primary btn-circle btn-sm" onclick="setState(this)" data-id="${u.id}"><i class="fa fa-check"></i></a>
+                            <#if (u.status == 1)><a class="btn btn-primary btn-circle btn-sm" onclick="setState(this)" data-id="${u.id}"><i class="fa fa-check"></i></a></#if>
+                            <#if (u.status == 0)><a class="btn btn-default btn-circle btn-sm" onclick="setState(this)" data-id="${u.id}"><i class="fa fa-check"></i></a></#if>
                         </td>
                         <td class="text-right text-nowrap">
                             <div class="btn-group ">

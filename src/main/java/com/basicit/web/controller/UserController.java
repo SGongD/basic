@@ -1,5 +1,7 @@
 package com.basicit.web.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.basicit.POJO.UserListPojo;
 import com.basicit.POJO.UserPojo;
 import com.basicit.POJO.UserPwPojo;
 import com.basicit.framework.datasource.PageInfo;
@@ -153,6 +155,28 @@ public class UserController {
     public String deleteUser(@RequestParam String userId) {
         log.info("#delete user = {}", userId);
         userService.deleteUser(userId);
+        return "view/user/user_list";
+    }
+
+    @PostMapping("/user/user_state")
+    @ResponseBody
+    public int userChangeState(@RequestParam String userid) {
+        log.info("#user state 변경 = {}", userid);
+        userService.updateStatus(userid);
+        User user = userService.findUserById2(userid);
+        int state = user.getStatus();
+        return state;
+    }
+
+    @PostMapping("/view/user/search")
+    // required = false는 필수가 아니라는 뜻으로 있을 수도 있고 아닐 수도 있다는 뜻.
+    public String search(@RequestParam(value="searchName", required = false) String searchName,
+                         @RequestParam(value="searchPhone", required = false) String searchPhone,
+                         @RequestParam(value="searchCompany", required = false) String searchCompany,
+                         @RequestParam(value="searchRole", required = false) String searchRole,
+                         @RequestParam(value = "pageNum", required = false) Integer pageNum, ModelMap map){
+        Page<UserListPojo> page = userService.searchUsers(pageNum, searchName, searchPhone, searchCompany, searchRole);
+        map.put("page", page);
         return "view/user/user_list";
     }
 }

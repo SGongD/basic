@@ -51,6 +51,8 @@
                                 사용자 추가 <i class="fa fa-plus"></i>
                             </a>
                         </div>
+
+                        <#-- 검색어(이름) -->
                         <div class=" col-lg-4 col-md-6 col-sm-8 " >
                                 <div class="tablesearch pull-right m-t-xs">
                                    <div class="table-td">
@@ -65,6 +67,8 @@
                                 </div>
                         </div>
                     </div>
+
+                    <#-- 고급 검색 -->
                     <div class="collapse" id="collapseExample">
                         <div class="border-top m-t-md m-b-none sidedown-box" >
                             <div class="row">
@@ -73,37 +77,38 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="control-label" for="order_id">사용자 이름</label>
-                                                <input type="text" id="order_id" name="order_id" value="" placeholder="사용자 이름을 입력하세요" class="form-control">
+                                                <input type="text" id="searchName" name="searchName" value="" placeholder="사용자 이름을 입력하세요" class="form-control">
 
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="control-label" >전화번호</label>
-                                                <input type="text" id="order_id" name="order_id" value="" placeholder="전화번호를 입력하세요" class="form-control">
+                                                <input type="text" id="searchPhone" name="searchPhone" value="" placeholder="전화번호를 입력하세요" class="form-control">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label class="control-label" >회사</label>
-                                        <select data-placeholder="-- 소속회사 선택하세요 --" class="chosen-select" tabindex="2">
+                                        <select data-placeholder="-- 소속회사 선택하세요 --" id="searchCompany" class="chosen-select" tabindex="2">
                                             <option value=""></option>
                                             <option value="1">베이직인터내셔널</option>
                                             <option value="2">비드넷씨엔씨</option>
+                                            <option value="3">구글</option>
+                                            <option value="4">네이버</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label class="control-label" >역할</label>
-                                        <select data-placeholder="-- 역할을 선택하세요 --" class="chosen-select" tabindex="2">
+                                        <select data-placeholder="-- 역할을 선택하세요 --" id="searchRole" class="chosen-select" tabindex="2">
                                             <option value=""></option>
-                                            <option value="1">사용자</option>
-                                            <option value="2">관리자</option>
+                                            <option value="common_role">사용자</option>
+                                            <option value="admin_role">관리자</option>
                                         </select>
                                     </div>
                                 </div>
@@ -111,15 +116,14 @@
                             <div class="row">
 
                                 <div class="col-sm-4 col-sm-push-8 text-right">
-                                    <button type="button" class="btn btn-primary"><i class="fa fa-search"></i> 검색</button>
+                                    <button type="button" class="btn btn-primary" onclick="findPreciseUser()"><i class="fa fa-search"></i> 검색</button>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
 
-
+                <#-- 사용자 목록 -->
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="ibox" id="ibox">
@@ -190,15 +194,15 @@
                         <input name="id" id="id" type="hidden" value="${user.id}">
                         <div class="form-group">
                             <label class="control-label" for="order_id">기존 비밀번호 입력</label>
-                            <input type="password" id="oldPw" name="oldPw" maxlength="6" placeholder="비밀번호를 입력하세요" class="form-control" value="">
+                            <input type="password" id="oldPw" name="oldPw" maxlength="12" placeholder="비밀번호를 입력하세요" class="form-control" value="">
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="order_id">변경 비밀번호 입력</label>
-                            <input type="password" id="newPw" name="newPw" maxlength="6" placeholder="비밀번호를 입력하세요" class="form-control" value="">
+                            <input type="password" id="newPw" name="newPw" maxlength="12" placeholder="비밀번호를 입력하세요" class="form-control" value="">
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="order_id">변경 비밀번호 확인</label>
-                            <input type="password" id="newPw2" name="newPw2" maxlength="6" placeholder="비밀번호를 입력하세요" class="form-control" value="">
+                            <input type="password" id="newPw2" name="newPw2" maxlength="12" placeholder="비밀번호를 입력하세요" class="form-control" value="">
                         </div>
                         <div class="form-group m-t-sm" >
                                 <button class="btn btn-md btn-primary" type="submit"><strong>확인</strong></button>
@@ -252,19 +256,47 @@
 
     function setState (ev) {
         var el = $(ev);
-        var elclass=el[0].className;
-        var id=el.data("id");
-        var id=el.data("id");
+        var elclass = el[0].className;
+        var userid=el.data("id");
 
-        if (el.hasClass("btn-default")) {
-            el.removeClass("btn-default").addClass("btn-primary");
-        } else {
-            el.removeClass("btn-primary").addClass("btn-default");
-        }
-        toastr.success('사용자 상태를 변경했습니다', '작업성공');
 
         $.ajax({
+            url: "/user/user_state?userid="+userid,
+            type: "post",
+            success: function(data) {
+                if (el.hasClass("btn-default")) {
+                    el.removeClass("btn-default").addClass("btn-primary");
+                } else {
+                    el.removeClass("btn-primary").addClass("btn-default");
+                }
+                toastr.success('사용자 상태를 변경했습니다', '작업성공');
+            },
+            error: function(data) {
+                toastr.error('사용자 상태 변경에 실패하였습니다.', '작업실패');
+            }
+        });
+    }
 
+
+
+
+    // 고급검색1) Search :: search 목록들 받아오기
+    function findPreciseUser() {
+        let searchName = $('#searchName').val();
+        let searchPhone = $('#searchPhone').val();
+        let searchCompany = $('#searchCompany').val();
+        let searchRole = $('#searchRole').val();
+
+        $.ajax({
+            url: "/view/user/search?searchName=" + searchName + "&searchPhone="+searchPhone+
+                "&searchCompany="+searchCompany+"&searchRole="+searchRole,
+            type: "post",
+            success: function(data) {
+                $('#wrapper').html(data);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                toastr.error('', '조회 에러');
+            }
         });
     }
 
@@ -302,6 +334,31 @@
             }
         });
 
+        $("#resetform").validate({
+            rules: {
+                newPw: {
+                    required: true,
+                    rangelength: [6, 12]
+                },
+                newPw2: {
+                    required: true,
+                    rangelength: [6, 12],
+                    equalTo: "#newPw"
+                }
+            },
+            messages: {
+                newPw: {
+                    required: "비밀번호를 입력하세요",
+                    rangelength: jQuery.validator.format("영문, 숫자로 혼합된 비밀번호를 입력하세요"),
+                    remote: jQuery.validator.format("{0} is already in use")
+                }
+            },
+            //debug: true,
+            submitHandler: function (form) {
+                setform(form);
+            }
+        });
+
         $("#add").validate({
 
             rules: {
@@ -312,7 +369,7 @@
                 },
                 userName: {
                     required: true,
-                    rangelength: [3, 6]
+                    rangelength: [6, 12]
                 },
                 phoneNum: {
                     required: true,
@@ -419,30 +476,7 @@
         }
 
 
-            $("#resetform").validate({
-                rules: {
-                    newPw: {
-                        required: true,
-                        rangelength: [6, 12]
-                    },
-                    newPw2: {
-                        required: true,
-                        rangelength: [6, 12],
-                        equalTo: "#newPw"
-                    }
-                },
-                messages: {
-                    newPw: {
-                        required: "비밀번호를 입력하세요",
-                        rangelength: jQuery.validator.format("영문, 숫자로 혼합된 비밀번호를 입력하세요"),
-                        remote: jQuery.validator.format("{0} is already in use")
-                    }
-                },
-                //debug: true,
-                submitHandler: function (form) {
-                    setform(form);
-                }
-            });
+
 
             // PE2) Edit :: 비밀번호 변경
             function setform(form) {
