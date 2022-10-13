@@ -73,7 +73,7 @@ public class UserController {
 
         User user = new User();
 
-        //
+        // 메세지 축약(암호화) 
         byte[] hashPassword = Digests.sha1(pwPojo.getOldPw().getBytes(), Encodes.decodeHex(existUser.getSalt()),
                                             UserServiceImpl.HASH_INTERATIONS);
         user.setPassword(Encodes.encodeHex(hashPassword));
@@ -175,6 +175,7 @@ public class UserController {
                          @RequestParam(value="searchCompany", required = false) String searchCompany,
                          @RequestParam(value="searchRole", required = false) String searchRole,
                          @RequestParam(value = "pageNum", required = false) Integer pageNum, ModelMap map){
+        // user_list_page 참조  (page<T> :: Page.class)
         Page<UserListPojo> page = userService.searchUsers(pageNum, searchName, searchPhone, searchCompany, searchRole);
         map.put("page", page);
         return "view/user/user_list";

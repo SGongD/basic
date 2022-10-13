@@ -43,6 +43,7 @@
     </div>
 
     <form action="/user/user_list_page" id="userPageForm">
+        <#-- 변수 뒤에 ! 붙이면 KEYWORDS가 없으면 공백(NULL) 으로 -->
         <input type="hidden" value="${keywords! }" name="keywords"/>
         <#assign formId = "userPageForm">
         <#assign showPageId = "ibox">

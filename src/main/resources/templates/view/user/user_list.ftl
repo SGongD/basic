@@ -68,7 +68,7 @@
                         </div>
                     </div>
 
-                    <#-- 고급 검색 -->
+                    <#-- Search :: 고급 검색 -->
                     <div class="collapse" id="collapseExample">
                         <div class="border-top m-t-md m-b-none sidedown-box" >
                             <div class="row">
@@ -282,6 +282,8 @@
 
     // 고급검색1) Search :: search 목록들 받아오기
     function findPreciseUser() {
+        // let은 재할당이 가능하고, const는 재할당이 불가능
+        // 위에서 기입한대로 id가 ~인 값을 가져와 각 변수에 담아준다.
         let searchName = $('#searchName').val();
         let searchPhone = $('#searchPhone').val();
         let searchCompany = $('#searchCompany').val();
